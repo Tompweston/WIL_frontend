@@ -1,33 +1,25 @@
+<script>
+    import SidebarButton from '$lib/components/SidebarButton.svelte';
+    import TaskCard from '$lib/components/TaskCard.svelte';
+</script>
 
 <main>
     <aside class="sidebar">
         <div class="sidebar-buttons">
-            <button class="sidebar-btn">Add Task</button>
-            <button class="sidebar-btn">Urgent Tasks</button>
-            <button class="sidebar-btn">Completed Tasks</button>
-            <button class="sidebar-btn">Incomplete Tasks</button>
-            <button class="sidebar-btn">Clear All Tasks</button>
+            <SidebarButton text="Add Task" />
+            <SidebarButton text="Urgent Tasks" />
+            <SidebarButton text="Completed Tasks" />
+            <SidebarButton text="Incomplete Tasks" />
+            <SidebarButton text="Clear All Tasks" />
         </div>
     </aside>
     
     <section class="content">
         <div class="card-grid-wrapper">
-            <div class="card">
-                <h3 class="card-title">Task 1</h3>
-                <p class="card-description">Description for task 1</p>
-            </div>
-            <div class="card">
-                <h3 class="card-title">Task 2</h3>
-                <p class="card-description">Description for task 2</p>
-            </div>
-            <div class="card">
-                <h3 class="card-title">Task 3</h3>
-                <p class="card-description">Description for task 3</p>
-            </div>
-            <div class="card">
-                <h3 class="card-title">Task 4</h3>
-                <p class="card-description">Description for task 4</p>
-            </div>
+            <TaskCard taskTitle="Sample Task 1" taskDescription="This is a description for Sample Task 1." />
+            <TaskCard taskTitle="Sample Task 2" taskDescription="This is a description for Sample Task 2." />
+            <TaskCard taskTitle="Sample Task 3" taskDescription="This is a description for Sample Task 3." />
+            <TaskCard taskTitle="Sample Task 4" taskDescription="This is a description for Sample Task 4." />
         </div>
     </section>
 </main>
@@ -51,29 +43,6 @@
         padding: 1rem;
     }
 
-    .sidebar-btn {
-        background-color: #EDCFAA;
-        border: 1px solid #614432;
-        padding: 0.5rem 1rem;
-        text-align: center;
-        font-size: x-large;
-        cursor: pointer;
-        border-radius: 10px;
-        color: #de603b;
-        font-family: 'subheading', cursive;
-        box-shadow: #614432 4px 4px;
-    }
-
-    .sidebar-btn:hover {
-        background-color: #de603b;
-        color: wheat;
-    }
-
-    .sidebar-btn:active {
-        box-shadow: #614432 1px 1px;
-        transform: translate(4px, 4px);
-    }
-
     .card-grid-wrapper {
         display: grid;
         grid-template-columns: 1fr 1fr 1fr;
@@ -81,26 +50,8 @@
         gap: 1rem;
     }
 
-    .card {
-        border: 2px solid #614432; 
-        border-radius: 10px;
-        padding-left: 1rem;
-        background-color: #EDCFAA;
-        display: flex;
-        flex-direction: column;
-        justify-content: flex-start;
-    }
-
     .content {
         padding: 1rem;
-    }
-
-    .card-title {
-        font-family: subheading;
-        color: #614432;
-        font-size: 2.5rem;
-        border-radius: 10px;
-        margin: 0; /* Remove default margin */
     }
 </style>
 
