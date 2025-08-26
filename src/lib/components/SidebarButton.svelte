@@ -8,25 +8,25 @@
 
 <style>
     .sidebar-btn {
-        background-color: #EDCFAA;
-        border: 1px solid #614432;
+        background-color: var(--contrast);
+        border: 1px solid var(--foreground);
         padding: 0.5rem 1rem;
         text-align: left;
-        font-size: x-large;
+        font-size: 1.5vw;
         cursor: pointer;
         border-radius: 10px;
-        color: #de603b;
+        color: var(--accent);
         font-family: 'subheading', cursive;
-        box-shadow: #614432 4px 4px;
+        box-shadow: var(--foreground) 4px 4px;
     }
 
     .sidebar-btn:hover {
-        background-color: #de603b;
+        background-color: var(--accent);
         color: wheat;
     }
 
     .sidebar-btn:active {
-        box-shadow: #614432 1px 1px;
+        box-shadow: var(--foreground) 1px 1px;
         transform: translate(4px, 4px);
     }
 </style>

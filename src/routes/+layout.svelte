@@ -22,6 +22,7 @@
 </footer>
 
 <style>
+
 	header {
 		display: grid;
 		grid-template-columns: 1fr 1fr 1fr;
@@ -52,22 +53,18 @@
 
 	.page-title{
 		font-size: 4vw;
-		color: #614432;
-		font-family: 'title2';
+		color: var(--foreground);
+		font-family: 'title';
 		font-weight: bolder;
 		margin: 0;
 		text-align: center;
 	}
 	
-    .logo:hover {
-        filter: drop-shadow(0 0 1.2em #f74008aa);
-        transform: translateY(-2px);
-    }
 
 	footer {
-        color: #deb887;
+        color: var(--foreground);
 		font-size: 1vw;
-		border-top: 2px solid #614432;
+		border-top: 2px solid var(--foreground);
 		width: 100%;
 		text-align: center;
 	}

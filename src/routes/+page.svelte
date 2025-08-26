@@ -6,11 +6,11 @@
 <main>
     <aside class="sidebar">
         <div class="sidebar-buttons">
-            <SidebarButton text="Add Task" />
-            <SidebarButton text="Urgent Tasks" />
-            <SidebarButton text="Completed Tasks" />
-            <SidebarButton text="Incomplete Tasks" />
-            <SidebarButton text="Clear All Tasks" />
+            <SidebarButton text="Add " />
+            <SidebarButton text="Urgent" />
+            <SidebarButton text="Completed" />
+            <SidebarButton text="Incomplete" />
+            <SidebarButton text="Clear All" />
         </div>
     </aside>
     
@@ -32,14 +32,14 @@
 	}
 
     .sidebar {
-        border-right: 2px solid #614432;
+        border-right: 2px solid var(--foreground);
     }
 
     .sidebar-buttons {
         display: flex;
         flex-direction: column;
         align-items: stretch;
-        gap: 4rem;
+        gap: 1rem;
         padding: 1rem;
     }
 

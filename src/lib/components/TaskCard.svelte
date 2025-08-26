@@ -9,10 +9,10 @@
 
 <style>
     .task {
-        border: 2px solid #614432; 
+        border: 2px solid var(--foreground);
         border-radius: 10px;
         padding-left: 1rem;
-        background-color: #EDCFAA;
+        background-color: var(--contrast);
         display: flex;
         flex-direction: column;
         justify-content: flex-start;
@@ -20,10 +20,9 @@
 
     .task-title {
         font-family: subheading;
-        color: #614432;
-        font-size: 2.5rem;
+        color: var(--foreground)    ;
+        font-size: 2.5vw;
         border-radius: 10px;
-        margin: 0; /* Remove default margin */
     }
 
 </style>

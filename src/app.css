@@ -37,15 +37,34 @@
 }
 
 :root {
+  background-color: var(--background);
+  --background: #ffebcd;
+  --foreground: #614432;
+  --accent: #DE603B;
+  --contrast: #EDCFAA;
+}
+
+/* @media (prefers-color-scheme: dark) {
+  :root {
+    --background: #121212;
+    --foreground: #E6E1DC;
+    --accent: #BB86FC;
+    --contrast: #3700B3;
+  }
+} */
+
+* {
+  padding: 0;
+  margin: 0;
+  box-sizing: border-box;
   font-family: 'body';
-  line-height: 1.5;
-  font-weight: 400;
-  color-scheme: light dark;
-  color: rgba(4, 4, 4, 0.87);
-  background-color: #ffebcd;
   font-synthesis: none;
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  
 }
+
+/*h1, h2, h3, h4, h5, h6 {
+  font-family: 'title', cursive;
+  color: var(--foreground);
+}*/
