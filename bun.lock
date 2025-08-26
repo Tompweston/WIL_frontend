@@ -4,6 +4,9 @@
     "": {
       "name": "todo-frontend",
       "dependencies": {
+        "@fontsource-variable/comfortaa": "^5.2.6",
+        "@fontsource/bungee-shade": "^5.2.6",
+        "@fontsource/fugaz-one": "^5.2.6",
         "@lucide/svelte": "^0.540.0",
       },
       "devDependencies": {
@@ -98,6 +101,12 @@
     "@eslint/object-schema": ["@eslint/object-schema@2.1.6", "", {}, "sha512-RBMg5FRL0I0gs51M/guSAj5/e14VQ4tpZnQNWwuDT66P14I43ItmPfIZRhO9fUVIPOAQXU47atlywZ/czoqFPA=="],
 
     "@eslint/plugin-kit": ["@eslint/plugin-kit@0.3.5", "", { "dependencies": { "@eslint/core": "^0.15.2", "levn": "^0.4.1" } }, "sha512-Z5kJ+wU3oA7MMIqVR9tyZRtjYPr4OC004Q4Rw7pgOKUOKkJfZ3O24nz3WYfGRpMDNmcOi3TwQOmgm7B7Tpii0w=="],
+
+    "@fontsource-variable/comfortaa": ["@fontsource-variable/comfortaa@5.2.6", "", {}, "sha512-uWjgXWmfUhpsax7Y6lUcWNOveIgtYYw4ZPbCkvMWjGPU2aYtTUa1Q8etT3zaDmmWXJOgv677Cgchj8Fh1304EA=="],
+
+    "@fontsource/bungee-shade": ["@fontsource/bungee-shade@5.2.6", "", {}, "sha512-+pxVaX7qpd+wOwa88MBoMhiUvLWYxDNFBf+OGJ9jei09uE+X4V5DGhHtCVc/NLdD5UUJ4oNyQIOJ8Twy/MeKBg=="],
+
+    "@fontsource/fugaz-one": ["@fontsource/fugaz-one@5.2.6", "", {}, "sha512-8OadInA2VXGVWttwgy03pM/JfhWBJJgf2lUsjEqcB8+J0uesPzvvS4i1ucz9/KK0PoPo3lYbQMz1tMBH39kNqg=="],
 
     "@humanfs/core": ["@humanfs/core@0.19.1", "", {}, "sha512-5DyQ4+1JEUzejeK1JGICcideyfUbGixgS9jNgex5nqkW+cY7WZhxBigmieN5Qnw9ZosSNVC9KQKyb+GUaGyKUA=="],
 

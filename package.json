@@ -32,6 +32,9 @@
 		"vite": "^7.0.4"
 	},
 	"dependencies": {
+		"@fontsource-variable/comfortaa": "^5.2.6",
+		"@fontsource/bungee-shade": "^5.2.6",
+		"@fontsource/fugaz-one": "^5.2.6",
 		"@lucide/svelte": "^0.540.0"
 	}
 }

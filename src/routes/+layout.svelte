@@ -1,21 +1,16 @@
 <script lang="ts">
 	import "../app.css"
-	import logo from '$lib/assets/todo_vector.png';
-	import exit from '$lib/assets/exit.jpg';
+	import logo from '$lib/assets/taskman.png';
 	let { children } = $props();
 </script>
-
+<head>
+  <title>Tommy's To-Dos</title>
+</head>
 <header>
 	<div>
 		<img src={logo} class="logo" alt="to-do Logo" />
 	</div>
-	<div>
-		<h1 class="page-title">Tommy's To-Dos</h1>
-	</div>
-	<div>
-		<img src={exit} class= "exit" alt="Exit Logo" />
-	</div>
-
+    <h1 class="page-title">Tommy's To-Dos</h1>
 </header>
 
 <main>
@@ -30,8 +25,9 @@
 	header {
 		display: grid;
 		grid-template-columns: 1fr 1fr 1fr;
+		border-bottom: 2px solid black;
+		width: 100%;
 	}
-
 
 	header div {
 		display: flex;
@@ -44,33 +40,18 @@
 		padding-left: 1rem;
 	}
 
-	header div:nth-child(3) {
-		justify-content: end;
-		padding-right: 1rem;
-	}
-
 	.logo {
-		height: 15vh;
+		height: 10vh;
 		will-change: filter;
 		transition: filter 300ms, transform 200ms;
-	}
-	.exit{
-		height: 10vh;
-		box-shadow: 5px 5px 0px rgb(0, 0, 0);
-        border-radius: 1rem;
-
-	}
-	.exit:hover {
-		filter: drop-shadow(0 0 1.2em #0ac200aa);
-		transform: translateY(-2px);
 	}
 
 	.page-title{
 		font-size: 3vw;
 		color: #cc5500;
+		font-family: title;
 	}
 	
-
     .logo:hover {
         filter: drop-shadow(0 0 1.2em #f74008aa);
         transform: translateY(-2px);
@@ -78,10 +59,10 @@
 
 	footer {
         color: #deb887;
-		justify-self: center;
-		align-self: flex-end;
-		font-size: 1.5vw;
-		padding: 1rem;
+		font-size: 1vw;
+		border-top: 2px solid black;
+		width: 100%;
+		text-align: center;
 	}
 
 
