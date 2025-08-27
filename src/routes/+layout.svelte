@@ -53,7 +53,7 @@
 
 	.page-title{
 		font-size: 4vw;
-		color: var(--foreground);
+		color: color-mix(in oklab, var(--foreground) 50%, transparent);
 		font-family: 'title';
 		font-weight: bolder;
 		margin: 0;

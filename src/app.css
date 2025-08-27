@@ -68,3 +68,5 @@
   font-family: 'title', cursive;
   color: var(--foreground);
 }*/
+
+/* color: color-mix(in oklab, var(--foreground) 50%, transparent); */

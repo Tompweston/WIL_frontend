@@ -1,9 +1,23 @@
-<script>
+<script lang="ts">
+    import { onMount } from 'svelte';
     import SidebarButton from '$lib/components/SidebarButton.svelte';
     import TaskCard from '$lib/components/TaskCard.svelte';
+
+    type Todo = {
+        title: string;
+        description: string;
+    };
+
+    let todos: Todo[] = [];
+
+    onMount(async () => {
+        const response = await fetch('http://127.0.0.1:8000/tasks/');
+        todos = await response.json();
+    });
 </script>
 
 <main>
+
     <aside class="sidebar">
         <div class="sidebar-buttons">
             <SidebarButton text="Add " />
@@ -16,10 +30,13 @@
     
     <section class="content">
         <div class="card-grid-wrapper">
-            <TaskCard taskTitle="Sample Task 1" taskDescription="This is a description for Sample Task 1." />
-            <TaskCard taskTitle="Sample Task 2" taskDescription="This is a description for Sample Task 2." />
-            <TaskCard taskTitle="Sample Task 3" taskDescription="This is a description for Sample Task 3." />
-            <TaskCard taskTitle="Sample Task 4" taskDescription="This is a description for Sample Task 4." />
+            {#if todos.length > 0}
+                {#each todos as todo}
+                    <TaskCard taskTitle={todo.title} taskDescription={todo.description} />
+                {/each}
+            {:else}
+                <p>Loading todos...</p>
+            {/if}
         </div>
     </section>
 </main>
@@ -47,11 +64,11 @@
         display: grid;
         grid-template-columns: 1fr 1fr 1fr;
         grid-template-rows: auto;
-        gap: 1rem;
+        gap: 2vw;
     }
 
     .content {
-        padding: 1rem;
+        padding: 2vw;
     }
 </style>
 

@@ -1,3 +1,6 @@
+//just commneted out some practice with adam
+
+
 //interface Props {
 //    text: string
 //}

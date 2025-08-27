@@ -16,13 +16,24 @@
         display: flex;
         flex-direction: column;
         justify-content: flex-start;
+        min-width: 25vw;
+        min-height: 30vh;
+
     }
 
     .task-title {
         font-family: subheading;
-        color: var(--foreground)    ;
-        font-size: 2.5vw;
+        color: var(--foreground);
+        font-size: 1.5vw;
         border-radius: 10px;
+        padding-bottom: 0.5rem;
+    }
+
+    .task-description {
+        font-family: body;
+        color: var(--foreground);
+        font-size: 1vw;
+        padding-bottom: 0.5rem;
     }
 
 </style>
