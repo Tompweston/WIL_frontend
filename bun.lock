@@ -5,6 +5,7 @@
       "name": "todo-frontend",
       "dependencies": {
         "@fontsource-variable/comfortaa": "^5.2.6",
+        "@fontsource/bungee-inline": "^5.2.6",
         "@fontsource/bungee-shade": "^5.2.6",
         "@fontsource/fugaz-one": "^5.2.6",
         "@lucide/svelte": "^0.540.0",
@@ -103,6 +104,8 @@
     "@eslint/plugin-kit": ["@eslint/plugin-kit@0.3.5", "", { "dependencies": { "@eslint/core": "^0.15.2", "levn": "^0.4.1" } }, "sha512-Z5kJ+wU3oA7MMIqVR9tyZRtjYPr4OC004Q4Rw7pgOKUOKkJfZ3O24nz3WYfGRpMDNmcOi3TwQOmgm7B7Tpii0w=="],
 
     "@fontsource-variable/comfortaa": ["@fontsource-variable/comfortaa@5.2.6", "", {}, "sha512-uWjgXWmfUhpsax7Y6lUcWNOveIgtYYw4ZPbCkvMWjGPU2aYtTUa1Q8etT3zaDmmWXJOgv677Cgchj8Fh1304EA=="],
+
+    "@fontsource/bungee-inline": ["@fontsource/bungee-inline@5.2.6", "", {}, "sha512-kZ/sXkGvNbDBWrgpvRLIeoG8FAqrdl19qi3YmZGATNkhbBUNjaiiSbe24HSm/Mxy6Cc+dsjCHkKtOEmM2vUdpQ=="],
 
     "@fontsource/bungee-shade": ["@fontsource/bungee-shade@5.2.6", "", {}, "sha512-+pxVaX7qpd+wOwa88MBoMhiUvLWYxDNFBf+OGJ9jei09uE+X4V5DGhHtCVc/NLdD5UUJ4oNyQIOJ8Twy/MeKBg=="],
 
