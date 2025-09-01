@@ -1,19 +1,11 @@
 <script lang="ts">
-    import { onMount } from 'svelte';
     import SidebarButton from '$lib/components/SidebarButton.svelte';
     import TaskCard from '$lib/components/TaskCard.svelte';
+    import type { PageData } from './$types';
 
-    type Todo = {
-        title: string;
-        description: string;
-    };
-
-    let todos: Todo[] = [];
-
-    onMount(async () => {
-        const response = await fetch('http://127.0.0.1:8000/tasks/');
-        todos = await response.json();
-    });
+    // `data` is populated by the `load` function in +page.server.ts
+    // Exporting `data` makes it available to this component.
+    export let data: PageData;
 </script>
 
 <main>
@@ -30,12 +22,12 @@
     
     <section class="content">
         <div class="card-grid-wrapper">
-            {#if todos.length > 0}
-                {#each todos as todo}
-                    <TaskCard taskTitle={todo.title} taskDescription={todo.description} />
+            {#if data.todos?.length > 0}
+                {#each data.todos as task}
+                    <TaskCard taskTitle={task.title} taskDescription={task.description} />
                 {/each}
             {:else}
-                <p>Loading todos...</p>
+                <p>No Todos found! <br> <br> Get started by adding a new task :)</p>
             {/if}
         </div>
     </section>

@@ -4,7 +4,7 @@
 	let { children } = $props();
 </script>
 <head>
-  <title>Tommy's <br> To-Dos</title>
+  <title>Tommy's To-Dos</title>
 </head>
 <header>
 	<div>
@@ -68,7 +68,5 @@
 		width: 100%;
 		text-align: center;
 	}
-
-
 </style>
 
