@@ -18,6 +18,7 @@
         color: var(--accent);
         font-family: 'subheading', cursive;
         box-shadow: var(--foreground) 4px 4px;
+        width: 100%;
     }
 
     .sidebar-btn:hover {

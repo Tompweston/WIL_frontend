@@ -1,11 +1,9 @@
 <script lang="ts">
     import SidebarButton from '$lib/components/SidebarButton.svelte';
     import TaskCard from '$lib/components/TaskCard.svelte';
-    import type { PageData } from './$types';
+    import type { PageProps } from './$types';
 
-    // `data` is populated by the `load` function in +page.server.ts
-    // Exporting `data` makes it available to this component.
-    export let data: PageData;
+    let { data }: PageProps = $props();
 </script>
 
 <main>
@@ -16,19 +14,20 @@
             <SidebarButton text="Urgent" />
             <SidebarButton text="Completed" />
             <SidebarButton text="Incomplete" />
-            <SidebarButton text="Clear All" />
+            <form style="width: 100%;"method="POST" action="?/delete">
+                <SidebarButton text="Clear All" />
+            </form>
         </div>
     </aside>
     
     <section class="content">
         <div class="card-grid-wrapper">
-            {#if data.todos?.length > 0}
-                {#each data.todos as task}
-                    <TaskCard taskTitle={task.title} taskDescription={task.description} />
-                {/each}
+            {#each data.todos as task}
+                <TaskCard taskTitle={task.title} taskDescription={task.description} />
             {:else}
                 <p>No Todos found! <br> <br> Get started by adding a new task :)</p>
-            {/if}
+            {/each}
+        
         </div>
     </section>
 </main>
@@ -47,7 +46,6 @@
     .sidebar-buttons {
         display: flex;
         flex-direction: column;
-        align-items: stretch;
         gap: 1rem;
         padding: 1rem;
     }

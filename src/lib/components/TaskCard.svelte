@@ -50,7 +50,7 @@
         font-family: body;
         color: var(--foreground);
         font-size: 1vw;
-        padding-bottom: 0.5rem;
+        padding: 0.2vw;
     }
 
     .togglers {
@@ -86,7 +86,4 @@
     .edit-button:hover, .delete-button:hover, .urgent-button:hover {
         color: var(--accent);
     }
-
-
-
 </style>

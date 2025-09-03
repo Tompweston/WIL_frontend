@@ -113,7 +113,7 @@ export interface components {
             /** Title */
             title: string;
             /** Description */
-            description?: string | null;
+            description: string;
             /**
              * Completed
              * @default false
