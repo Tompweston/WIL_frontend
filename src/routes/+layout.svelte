@@ -1,6 +1,6 @@
 <script lang="ts">
 	import "../app.css"
-	import logo from '$lib/assets/taskman.png';
+	import logo from '$lib/assets/FinalLogo.png';
 	let { children } = $props();
 </script>
 <head>
