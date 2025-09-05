@@ -39,11 +39,11 @@
     }
 
     .task-title {
-        font-family: subheading;
+        font-family: "8bit";
         color: var(--foreground);
         font-size: 1.5vw;
         border-radius: 10px;
-        padding-bottom: 0.5rem;
+        padding: 0.5rem;
     }
 
     .task-description {

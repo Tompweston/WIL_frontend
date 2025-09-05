@@ -16,9 +16,11 @@
         cursor: pointer;
         border-radius: 10px;
         color: var(--accent);
-        font-family: 'subheading', cursive;
+        font-family: '8bit';
         box-shadow: var(--foreground) 4px 4px;
-        width: 100%;
+        width: auto;
+        height: 5vh;
+        line-height: 0vh;
     }
 
     .sidebar-btn:hover {

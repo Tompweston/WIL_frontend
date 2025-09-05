@@ -53,13 +53,12 @@
 
 	.page-title{
 		font-size: 4vw;
-		color: color-mix(in oklab, var(--foreground) 50%, transparent);
+		color: var(--foreground);
 		font-family: 'title';
 		font-weight: bolder;
 		margin: 0;
 		text-align: center;
 	}
-	
 
 	footer {
         color: var(--foreground);

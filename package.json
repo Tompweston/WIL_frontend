@@ -38,7 +38,10 @@
 		"@fontsource/bungee-inline": "^5.2.6",
 		"@fontsource/bungee-shade": "^5.2.6",
 		"@fontsource/fugaz-one": "^5.2.6",
+		"@fontsource/lobster": "^5.2.6",
+		"@fontsource/press-start-2p": "^5.2.6",
 		"@lucide/svelte": "^0.540.0",
+		"carbon-components-svelte": "^0.89.6",
 		"openapi-fetch": "^0.14.0"
 	}
 }
