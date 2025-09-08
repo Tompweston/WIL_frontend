@@ -11,16 +11,15 @@
         background-color: var(--contrast);
         border: 1px solid var(--foreground);
         padding: 0.5rem 1rem;
-        text-align: left;
+        text-align: center;
         font-size: 1.5vw;
         cursor: pointer;
-        border-radius: 10px;
-        color: var(--accent);
+        color: var(--foreground);
         font-family: '8bit';
         box-shadow: var(--foreground) 4px 4px;
         width: auto;
         height: 5vh;
-        line-height: 0vh;
+
     }
 
     .sidebar-btn:hover {

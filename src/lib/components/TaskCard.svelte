@@ -44,6 +44,8 @@
         font-size: 1.5vw;
         border-radius: 10px;
         padding: 0.5rem;
+        line-height: 1.5;
+        
     }
 
     .task-description {
