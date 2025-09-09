@@ -4,13 +4,14 @@
 	let { children } = $props();
 </script>
 <head>
-  <title>Tommy's To-Dos</title>
+	<title>Tommy's To-Dos</title>
 </head>
+
 <header>
 	<div>
 		<img src={logo} class="logo" alt="to-do Logo" />
 	</div>
-    <h1 class="page-title">My Tasks</h1>
+	<h1 class="page-title">My Tasks</h1>
 </header>
 
 <main>
@@ -21,6 +22,7 @@
 	Made with ❤️ 
 </footer>
 
+
 <style>
 
 	header {
@@ -28,6 +30,7 @@
 		grid-template-columns: 1fr 1fr 1fr;
 		border-bottom: 2px solid #614432;
 		width: 100%;
+
 	}
 
 	header div {
@@ -52,13 +55,17 @@
 	}
 
 	.page-title{
-		font-size: 4vw;
+		font-size: 4rem;
 		color: var(--foreground);
 		font-family: 'title';
 		font-weight: bolder;
 		margin: 0;
 		text-align: center;
+		text-shadow: 2px 4px 0px var(--peach),
+                 4px 8px 0px var(--yellow);
+		padding: 1rem;
 	}
+	
 
 	footer {
         color: var(--foreground);
@@ -66,6 +73,9 @@
 		border-top: 2px solid var(--foreground);
 		width: 100%;
 		text-align: center;
+		padding: 1rem;
 	}
+
+	
 </style>
 

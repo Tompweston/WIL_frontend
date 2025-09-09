@@ -8,7 +8,7 @@
 
 <style>
     .sidebar-btn {
-        background-color: var(--contrast);
+        background-color: var(--yellow);
         border: 1px solid var(--foreground);
         padding: 0.5rem 1rem;
         text-align: center;
@@ -24,7 +24,7 @@
 
     .sidebar-btn:hover {
         background-color: var(--accent);
-        color: wheat;
+        color: var(--cream);
     }
 
     .sidebar-btn:active {

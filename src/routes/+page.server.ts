@@ -1,8 +1,8 @@
 import client from '$lib/server';
 import type { PageServerLoad, Actions } from './$types';
 import { fail, redirect } from '@sveltejs/kit';
-//gets all tasks 
 
+//gets all tasks 
 export const load: PageServerLoad = async ({ fetch }) => {
   const result = await client.GET("/tasks/");
   let todos: typeof result.data = [];
@@ -54,5 +54,6 @@ export const actions = {
       })
     // after creating, redirect to base 
     throw redirect(303, '/');
-  }
+  },
+
 } satisfies Actions;

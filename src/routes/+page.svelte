@@ -6,11 +6,11 @@
 </script>
 
 <main>
+	<div class="bg"></div>
 	<section class="navbar">
 		<div class="navbar-buttons">
 			<!-- This label opens the modal by toggling the hidden checkbox -->
 			<label for="addTaskModal" class="add-button">Add</label>
-			<SidebarButton text="Urgent" />
 			<SidebarButton text="Completed" />
 			<SidebarButton text="Incomplete" />
 			<form method="POST" action="/?/delete">
@@ -23,13 +23,14 @@
         
 		<div class="card-grid-wrapper">
 			{#each data.todos as task}
-				<TaskCard taskTitle={task.title} taskDescription={task.description} />
+				<TaskCard taskTitle={task.title} taskDescription={task.description} taskCompleted={task.completed} taskID={task._id} />
 			{:else}
 				<p class="no-todos">No Todos Yet! <br /><br /> Add some tasks :)</p>
 			{/each}
 		</div>
 	</section>
 
+	
 	<!-- 1) Hidden checkbox controls visibility -->
 	<input id="addTaskModal" type="checkbox" hidden />
 
@@ -60,7 +61,6 @@
 						<textarea class="description-input" name="description" required></textarea>
 					</label>
 				</div>
-
 				<div class="modal-actions">
 					<button class="add-button" type="submit">Save</button>
 				</div>
@@ -75,13 +75,14 @@
 		grid-template-rows: 1fr 5fr;
 		width: 100%;
 	}
+	
 
 	.navbar-buttons {
 		display: flex;
 		flex-direction: row;
 		gap: 4rem;
 		padding: 1rem;
-		justify-content: space-evenly;
+		justify-content: space-evenly;	
 	}
 
 	.card-grid-wrapper {
@@ -93,7 +94,7 @@
 	.content { padding: 2vw; }
 
 	.add-button {
-		background-color: var(--contrast);
+		background-color: var(--yellow);
 		border: 1px solid var(--foreground);
         color: var(--foreground);
 		padding: 0.5rem 1rem;
@@ -105,7 +106,7 @@
 		width: auto;
 		height: 5vh;
 	}
-	.add-button:hover { background-color: var(--accent); color: wheat; }
+	.add-button:hover { background-color: var(--accent); color: var(--cream); }
 	.add-button:active { box-shadow: var(--foreground) 1px 1px; transform: translate(4px, 4px); }
 
 	.form-inputs {
@@ -146,6 +147,7 @@
 		box-shadow: 0 10px 30px rgba(0,0,0,0.2);
 		padding: 1.25rem;
 		min-width: min(600px, 90vw);
+		box-shadow: 4px 4px var(--foreground);
 	}
 
 	.modal-header {
@@ -189,7 +191,7 @@
 	.title-input {
 		height: 2rem;
 		border: 1px solid var(--foreground);
-		background-color: var(--contrast);
+		background-color: var(--contrast); 
 		padding-left: 1rem;
 	}
 
@@ -211,4 +213,6 @@
 	input:focus {
         outline-color: var(--accent); 
     }
+
+
 </style>
