@@ -1,8 +1,14 @@
 <script lang="ts"> 
-    let {text}: {text: string}= $props();
+    let { 
+        text,
+        pressed
+    }: {
+        text: string,
+        pressed?: VoidFunction
+    }= $props();
 </script>
 
-<button class="sidebar-btn">
+<button onclick={() => pressed ? pressed() : null} class="sidebar-btn">
     {text}
 </button>
 
@@ -17,14 +23,15 @@
         color: var(--foreground);
         font-family: '8bit';
         box-shadow: var(--foreground) 4px 4px;
-        width: auto;
+        width: 7;
         height: 5vh;
 
     }
 
     .sidebar-btn:hover {
-        background-color: var(--accent);
-        color: var(--cream);
+        background-color: var(--blue);
+        color: var(--peach);
+        box-shadow: var(--peach) 4px 4px;
     }
 
     .sidebar-btn:active {

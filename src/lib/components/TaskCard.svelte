@@ -15,9 +15,12 @@
             <span class="checkmark"></span>
         </label>
         <!-- Delete Button -->
-        <button class="delete-button">
-            <Trash2  size="2vw"/>
-        </button>
+        <form method="POST" action="/?/deleteTask">
+            <input type="hidden" name="_id" value={taskID} />
+            <button class="delete-button">
+                <Trash2  size="2rem"/>
+            </button>
+        </form>
     </div>
 </div>
 
@@ -26,11 +29,12 @@
     .task {
         border: 2px solid var(--foreground);
         padding-left: 1rem;
-        background-color: var(--yellow);
+        background-color: var(--contrast);
         display: grid;
         grid-template-columns: 9fr 1fr;
         min-width: 25vw;
         min-height: 30vh;
+        box-shadow: 5px 5px var(--foreground);
     }
 
     .task-title {
@@ -54,19 +58,19 @@
         flex-direction: column;
         align-items: center;
         justify-content: space-between;
-        padding: .5rem;
+        padding: 1rem;
     }
 
     /* Delete button */
     .delete-button {
-        background: var(--peach);
+        background-color: var(--yellow);
         border: 1px solid var(--foreground);
-        box-shadow: 2px 2px var(--foreground);
+        box-shadow: 3px 3px var(--foreground);
         cursor: pointer;
         padding: 0;
     }
-
     .delete-button:hover {
+        background-color: var(--accent);
         color: var(--cream);
     }
 
@@ -80,7 +84,6 @@
         display: block;
         position: relative;
         cursor: pointer;
-        font-size: 1.2vw;
     }
 
     .checkbox-container input {
@@ -89,12 +92,14 @@
     }
 
     .checkmark {
-        height: 1.5vw;
-        width: 1.5vw;
+        height: 2rem;
+        width: 2rem;
         background-color: var(--cream);
         border: 2px solid var(--foreground);
         box-shadow: 2px 2px var(--foreground);
-        display: inline-block;
+    display: inline-block;
+    position: relative; /* ensure :after is positioned relative to the box */
+    box-sizing: border-box;
     }
 
     .checkbox-container input:checked ~ .checkmark {
@@ -112,12 +117,14 @@
     }
 
     .checkbox-container .checkmark:after {
-        left: 0.45vw;
-        top: 0.1vw;
-        width: 0.4vw;
-        height: 1vw;
+        left: 50%;
+        top: 50%;
+        width: 0.45vw;
+        height: 0.9vw;
         border: solid var(--foreground);
-        border-width: 0 0.25vw 0.25vw 0;
-        transform: rotate(45deg);
+        /* small, consistent border widths in vw so scaling matches the box */
+        border-width: 0 0.18vw 0.18vw 0;
+        transform: translate(-50%, -55%) rotate(45deg);
+        box-sizing: border-box;
     }
 </style>

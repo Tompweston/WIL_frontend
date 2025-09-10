@@ -1,8 +1,12 @@
 <script lang="ts">
+	import { fade } from 'svelte/transition';
 	import SidebarButton from '$lib/components/NavbarButton.svelte';
 	import TaskCard from '$lib/components/TaskCard.svelte';
 	import type { PageProps } from './$types';
 	let { data, form }: PageProps = $props();
+	let showModal = $state(false);
+
+	const toggleModal = () => showModal = !showModal;
 </script>
 
 <main>
@@ -10,7 +14,8 @@
 	<section class="navbar">
 		<div class="navbar-buttons">
 			<!-- This label opens the modal by toggling the hidden checkbox -->
-			<label for="addTaskModal" class="add-button">Add</label>
+			<!-- <label for="addTaskModal" class="add-button">Add</label> -->
+			<SidebarButton text="Add" pressed={toggleModal}/>
 			<SidebarButton text="Completed" />
 			<SidebarButton text="Incomplete" />
 			<form method="POST" action="/?/delete">
@@ -30,43 +35,41 @@
 		</div>
 	</section>
 
-	
-	<!-- 1) Hidden checkbox controls visibility -->
-	<input id="addTaskModal" type="checkbox" hidden />
+	{#if showModal}
+		<!-- 2) Modal (shown only when checkbox is checked) -->
+		<div transition:fade={{duration:100}} class="modal-backdrop">
+			<!-- Clicking the backdrop closes the modal -->
+			<label for="addTaskModal" class="backdrop"></label>
 
-	<!-- 2) Modal (shown only when checkbox is checked) -->
-	<div class="modal-backdrop">
-		<!-- Clicking the backdrop closes the modal -->
-		<label for="addTaskModal" class="backdrop"></label>
+			<div class="modal" role="dialog" aria-modal="true" aria-labelledby="addTaskTitle">
+				<header class="modal-header">
+					<h2 class="addTaskTitle">Add Task</h2>
+					<!-- Close button -->
+					<button onclick={toggleModal} class="close-button" aria-label="Close">X</button>
+				</header>
 
-		<div class="modal" role="dialog" aria-modal="true" aria-labelledby="addTaskTitle">
-			<header class="modal-header">
-				<h2 class="addTaskTitle">Add Task</h2>
-				<!-- Close button -->
-				<label for="addTaskModal" class="close-button" aria-label="Close">X</label>
-			</header>
+				<form method="POST" action="/?/create">
+					{#if form?.missing}
+						<p class="error">The title & description field is required</p>
+					{/if}
 
-			<form method="POST" action="/?/create">
-				{#if form?.missing}
-					<p class="error">The title & description field is required</p>
-				{/if}
-
-				<div class="form-inputs">
-					<label>
-						Title
-						<input class="title-input" name="title" type="text" required />
-					</label>
-					<label class="description-label">
-						Description
-						<textarea class="description-input" name="description" required></textarea>
-					</label>
-				</div>
-				<div class="modal-actions">
-					<button class="add-button" type="submit">Save</button>
-				</div>
-			</form>
+					<div class="form-inputs">
+						<label>
+							Title
+							<input class="title-input" name="title" type="text" required />
+						</label>
+						<label class="description-label">
+							Description
+							<textarea class="description-input" name="description" required></textarea>
+						</label>
+					</div>
+					<div class="modal-actions">
+						<button class="add-button" type="submit">Save</button>
+					</div>
+				</form>
+			</div>
 		</div>
-	</div>
+	{/if}
 </main>
 
 <style>
@@ -118,15 +121,10 @@
 
 	/* Modal — hidden by default */
 	.modal-backdrop {
-		display: none;
+		display: block;
 		position: fixed;
 		inset: 0;
 		z-index: 1000;
-	}
-
-	/* Show modal when checkbox is checked */
-	#addTaskModal:checked ~ .modal-backdrop {
-		display: block;
 	}
 
 	/* Clickable dimmed backdrop that closes modal */
@@ -159,13 +157,13 @@
 	}
 
 	.close-button {
-		border-radius: 8px;
-		padding: 0.25rem 0.6rem;
 		cursor: pointer;
-		user-select: none;
         font-family: "8bit";
         font-weight: bold;
         font-size: x-large;
+		background-color: transparent;
+		border: none;
+		color: var(--foreground);
 	}
 
 	.modal-actions {
@@ -184,7 +182,7 @@
         color: var(--foreground);
         text-align: center;
         grid-column: 2;
-        grid-row: 2;
+        grid-row: 6;
     }
 
 

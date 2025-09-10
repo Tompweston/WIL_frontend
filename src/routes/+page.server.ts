@@ -21,7 +21,7 @@ export const load: PageServerLoad = async ({ fetch }) => {
 export const actions = {
   //deletes all tasks 
 	delete: async () => {
-		const result = await client.DELETE("/tasks/")
+    const result = await client.DELETE("/tasks/")
     let todos: typeof result.data = [];
     let success = false;
 
@@ -55,5 +55,18 @@ export const actions = {
     // after creating, redirect to base 
     throw redirect(303, '/');
   },
+
+  deleteTask: async (event) => {
+    const formData = await event.request.formData();
+    const id = formData.get('_id')?.toString();
+    if (!id) {
+      return fail(400, { id, missing: true });
+    }
+    const result = await client.DELETE('/tasks/{id}', { 
+      params: { path: { id } } 
+    });
+      // after deleting, redirect to base
+      throw redirect(303, '/');
+  }
 
 } satisfies Actions;
