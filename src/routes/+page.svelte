@@ -15,7 +15,7 @@
 		<div class="navbar-buttons">
 			<!-- This label opens the modal by toggling the hidden checkbox -->
 			<!-- <label for="addTaskModal" class="add-button">Add</label> -->
-			<SidebarButton text="Add" pressed={toggleModal}/>
+			<SidebarButton text="Create" pressed={toggleModal}/>
 			<SidebarButton text="Completed" />
 			<SidebarButton text="Incomplete" />
 			<form method="POST" action="/?/delete">
@@ -56,15 +56,15 @@
 					<div class="form-inputs">
 						<label>
 							Title
-							<input class="title-input" name="title" type="text" required />
+							<input class="title-input" name="title" type="text" required maxlength="40" />
 						</label>
 						<label class="description-label">
 							Description
-							<textarea class="description-input" name="description" required></textarea>
+							<textarea class="description-input" name="description" required maxlength="500"></textarea>
 						</label>
 					</div>
 					<div class="modal-actions">
-						<button class="add-button" type="submit">Save</button>
+						<button class="save-button" type="submit">Save</button>
 					</div>
 				</form>
 			</div>
@@ -96,7 +96,7 @@
 	}
 	.content { padding: 2vw; }
 
-	.add-button {
+	.save-button {
 		background-color: var(--yellow);
 		border: 1px solid var(--foreground);
         color: var(--foreground);
@@ -108,9 +108,10 @@
 		box-shadow: var(--foreground) 4px 4px;
 		width: auto;
 		height: 5vh;
+		outline-color: var(--accent);
 	}
-	.add-button:hover { background-color: var(--accent); color: var(--cream); }
-	.add-button:active { box-shadow: var(--foreground) 1px 1px; transform: translate(4px, 4px); }
+	.save-button:hover { background-color: var(--accent); color: var(--cream); }
+	.save-button:active { box-shadow: var(--foreground) 1px 1px; transform: translate(4px, 4px); }
 
 	.form-inputs {
 		display: flex;
@@ -175,6 +176,7 @@
     input{
         background-color: blanchedalmond;
         width: 100%;
+		outline-color: var(--accent);
     }
     .no-todos{
         font-family: '8bit';
@@ -207,10 +209,4 @@
 		display: flex;
 		flex-direction: column;
 	}
-
-	input:focus {
-        outline-color: var(--accent); 
-    }
-
-
 </style>

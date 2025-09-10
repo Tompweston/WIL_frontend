@@ -1,6 +1,7 @@
 <script lang="ts">
     let {taskID, taskTitle, taskDescription, taskCompleted}: {taskID: string | null | undefined, taskTitle: string, taskDescription: string, taskCompleted: boolean} = $props();
     import { Trash2 } from '@lucide/svelte';
+    import bin from '$lib/assets/bin.svg';
 </script>
 
 <div class="task">
@@ -18,7 +19,7 @@
         <form method="POST" action="/?/deleteTask">
             <input type="hidden" name="_id" value={taskID} />
             <button class="delete-button">
-                <Trash2  size="2rem"/>
+                <img src={bin} alt="Delete" class="Bin"/>
             </button>
         </form>
     </div>
@@ -27,14 +28,13 @@
 <style>
 
     .task {
-        border: 2px solid var(--foreground);
         padding-left: 1rem;
         background-color: var(--contrast);
         display: grid;
         grid-template-columns: 9fr 1fr;
         min-width: 25vw;
         min-height: 30vh;
-        box-shadow: 5px 5px var(--foreground);
+        box-shadow: 4px 4px var(--foreground);
     }
 
     .task-title {
@@ -42,15 +42,25 @@
         color: var(--foreground);
         font-size: 1.5vw;
         border-radius: 10px;
-        padding: 0.25rem;
+        padding: 0.5rem;
         line-height: 1.5;
+        word-wrap: break-word;
+        word-break: break-word;
+        max-width: 100%;
+        box-sizing: border-box;
     }
 
     .task-description {
         font-family: body;
         color: var(--foreground);
-        font-size: 1vw;
-        padding: 0.2vw;
+        font-size: 1rem;
+        font-weight: bolder;
+        padding: .5rem;
+        white-space: pre-wrap; /* preserve newlines from textarea */
+        word-wrap: break-word;
+        word-break: break-word;
+        max-width: 100%;
+        box-sizing: border-box;
     }
 
     .togglers {
@@ -64,14 +74,22 @@
     /* Delete button */
     .delete-button {
         background-color: var(--yellow);
-        border: 1px solid var(--foreground);
+        color: var(--foreground);
+        border:none;
         box-shadow: 3px 3px var(--foreground);
         cursor: pointer;
         padding: 0;
+        width: 2.2rem;
+        height: 2.2rem;
     }
+    .Bin {
+        width: 2rem;
+        height: 2rem;
+    }
+
     .delete-button:hover {
         background-color: var(--accent);
-        color: var(--cream);
+        color: var(--yellow);
     }
 
     .delete-button:active {
@@ -95,15 +113,14 @@
         height: 2rem;
         width: 2rem;
         background-color: var(--cream);
-        border: 2px solid var(--foreground);
-        box-shadow: 2px 2px var(--foreground);
-    display: inline-block;
-    position: relative; /* ensure :after is positioned relative to the box */
-    box-sizing: border-box;
+        box-shadow: 3px 3px var(--foreground);
+        display: inline-block;
+        position: relative; /* ensure :after is positioned relative to the box */
+        box-sizing: border-box;
     }
 
     .checkbox-container input:checked ~ .checkmark {
-        background-color: var(--peach);
+        background-color: var(--accent);
     }
 
     .checkmark:after {
@@ -121,7 +138,7 @@
         top: 50%;
         width: 0.45vw;
         height: 0.9vw;
-        border: solid var(--foreground);
+        border: solid var(--cream);
         /* small, consistent border widths in vw so scaling matches the box */
         border-width: 0 0.18vw 0.18vw 0;
         transform: translate(-50%, -55%) rotate(45deg);

@@ -15,23 +15,23 @@
 <style>
     .sidebar-btn {
         background-color: var(--yellow);
-        border: 1px solid var(--foreground);
+        border: none;
         padding: 0.5rem 1rem;
         text-align: center;
-        font-size: 1.5vw;
+        font-size: 1rem;
         cursor: pointer;
         color: var(--foreground);
         font-family: '8bit';
         box-shadow: var(--foreground) 4px 4px;
-        width: 7;
-        height: 5vh;
+        width: 12rem;
+        height: 3rem;
 
     }
 
     .sidebar-btn:hover {
-        background-color: var(--blue);
-        color: var(--peach);
-        box-shadow: var(--peach) 4px 4px;
+        background-color: var(--accent);
+        color: var(--cream);
+        box-shadow: var(--foreground) 4px 4px;
     }
 
     .sidebar-btn:active {
