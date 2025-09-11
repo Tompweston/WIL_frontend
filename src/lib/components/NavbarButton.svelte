@@ -24,8 +24,7 @@
         font-family: '8bit';
         box-shadow: var(--foreground) 4px 4px;
         width: 12rem;
-        height: 3rem;
-
+        height: 2rem;
     }
 
     .sidebar-btn:hover {

@@ -14,14 +14,16 @@
     <div class="task-content">
         <h3 class="task-title">{taskTitle}</h3>
         <p class="task-description">{taskDescription}</p>
+        <div>
+</div>
     </div>
     <div class="togglers">
         
         <!-- Update Completed Form -->
         <form id="complete_form" method="POST" action="?/updateCompleted" use:enhance>
             <!-- Custom Checkbox -->
-            <label for="completed-checkbox" class="checkbox-container">
-                <input id="completed-checkbox" type="checkbox" name="completed" bind:checked={taskCompleted} onchange={toggleComplete} hidden/>
+            <label for="checkbox-{taskID}" class="checkbox-container">
+                <input id="checkbox-{taskID}" type="checkbox" name="completed" bind:checked={taskCompleted} onchange={toggleComplete} hidden/>
                 <span class="checkmark"></span>
             </label>
             <input type="text" name="_id" value={taskID} hidden/>

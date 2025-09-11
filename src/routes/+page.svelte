@@ -55,7 +55,6 @@
 				<form method="POST" action="/?/create" use:enhance onsubmit={toggleModal}>
 					{#if form?.missing}
 						<p class="error">The title & description field is required</p>
-						event.preventDefault();
 					{/if}
 					<div class="form-inputs">
 						<label>
