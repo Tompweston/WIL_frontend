@@ -130,15 +130,15 @@ export interface components {
         /** TaskUpdate */
         TaskUpdate: {
             /** Title */
-            title: string | null;
+            title?: string | null;
             /** Description */
-            description: string | null;
+            description?: string | null;
             /** Completed */
-            completed: boolean | null;
+            completed?: boolean | null;
             /** Userid */
-            userID: string | null;
+            userID?: string | null;
             /** Urgent */
-            urgent: boolean | null;
+            urgent?: boolean | null;
         };
         /** User */
         User: {
@@ -343,7 +343,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["TaskUpdate"];
+                    "application/json": components["schemas"]["Task"];
                 };
             };
             /** @description Validation Error */

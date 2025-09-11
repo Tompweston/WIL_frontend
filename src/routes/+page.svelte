@@ -5,9 +5,11 @@
 	import type { PageProps } from './$types';
 	let { data, form }: PageProps = $props();
 	let showModal = $state(false);
-
 	const toggleModal = () => showModal = !showModal;
+	import { enhance } from '$app/forms';
+	
 </script>
+
 
 <main>
 	<div class="bg"></div>
@@ -15,10 +17,10 @@
 		<div class="navbar-buttons">
 			<!-- This label opens the modal by toggling the hidden checkbox -->
 			<!-- <label for="addTaskModal" class="add-button">Add</label> -->
-			<SidebarButton text="Create" pressed={toggleModal}/>
 			<SidebarButton text="Completed" />
 			<SidebarButton text="Incomplete" />
-			<form method="POST" action="/?/delete">
+			<SidebarButton text="Create" pressed={toggleModal}/>
+			<form method="POST" action="/?/delete" use:enhance>
 				<SidebarButton text="Clear All" />
 			</form>
 		</div>
@@ -28,7 +30,9 @@
         
 		<div class="card-grid-wrapper">
 			{#each data.todos as task}
-				<TaskCard taskTitle={task.title} taskDescription={task.description} taskCompleted={task.completed} taskID={task._id} />
+				{#if task._id}
+					<TaskCard taskTitle={task.title} taskDescription={task.description} taskCompleted={task.completed} taskID={task._id} />
+				{/if}
 			{:else}
 				<p class="no-todos">No Todos Yet! <br /><br /> Add some tasks :)</p>
 			{/each}
@@ -48,11 +52,11 @@
 					<button onclick={toggleModal} class="close-button" aria-label="Close">X</button>
 				</header>
 
-				<form method="POST" action="/?/create">
+				<form method="POST" action="/?/create" use:enhance onsubmit={toggleModal}>
 					{#if form?.missing}
 						<p class="error">The title & description field is required</p>
+						event.preventDefault();
 					{/if}
-
 					<div class="form-inputs">
 						<label>
 							Title
@@ -66,6 +70,7 @@
 					<div class="modal-actions">
 						<button class="save-button" type="submit">Save</button>
 					</div>
+					
 				</form>
 			</div>
 		</div>
@@ -102,7 +107,7 @@
         color: var(--foreground);
 		padding: 0.5rem 1rem;
 		text-align: center;
-		font-size: 1.5vw;
+		font-size: 1.5rem;
 		cursor: pointer;
 		font-family: '8bit';
 		box-shadow: var(--foreground) 4px 4px;
@@ -147,6 +152,7 @@
 		padding: 1.25rem;
 		min-width: min(600px, 90vw);
 		box-shadow: 4px 4px var(--foreground);
+		background-color: var(--contrast);
 	}
 
 	.modal-header {
@@ -174,13 +180,13 @@
 		gap: 0.75rem;
 	}
     input{
-        background-color: blanchedalmond;
+        background-color: var(--cream);
         width: 100%;
 		outline-color: var(--accent);
     }
     .no-todos{
         font-family: '8bit';
-        font-size: 1.5vw;
+        font-size: 1.5rem;
         color: var(--foreground);
         text-align: center;
         grid-column: 2;
@@ -191,7 +197,6 @@
 	.title-input {
 		height: 2rem;
 		border: 1px solid var(--foreground);
-		background-color: var(--contrast); 
 		padding-left: 1rem;
 	}
 
@@ -199,10 +204,11 @@
         vertical-align: top; 
 		font-family: body;
 		font-weight: bold;
-		background-color: var(--contrast);
+		background-color: var(--cream);
 		border: 1px solid var(--foreground);
 		padding: 1rem;
 		outline-color: var(--accent); 
+		scrollbar-color: var(--foreground) var(--contrast);
 	}
 
 	.description-label {

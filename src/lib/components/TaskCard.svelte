@@ -1,7 +1,13 @@
 <script lang="ts">
-    let {taskID, taskTitle, taskDescription, taskCompleted}: {taskID: string | null | undefined, taskTitle: string, taskDescription: string, taskCompleted: boolean} = $props();
-    import { Trash2 } from '@lucide/svelte';
+	import { enhance } from '$app/forms';
+    let {taskID, taskTitle, taskDescription, taskCompleted}: {taskID: string, taskTitle: string, taskDescription: string, taskCompleted: boolean} = $props();
     import bin from '$lib/assets/bin.svg';
+    
+    const toggleComplete = () => {
+        // Submit the form when the checkbox is toggled
+        const form = document.getElementById('complete_form') as HTMLFormElement;
+        form.requestSubmit();
+    };
 </script>
 
 <div class="task">
@@ -10,21 +16,27 @@
         <p class="task-description">{taskDescription}</p>
     </div>
     <div class="togglers">
-        <!-- Custom Checkbox -->
-        <label class="checkbox-container">
-            <input type="checkbox" bind:checked={taskCompleted}>
-            <span class="checkmark"></span>
-        </label>
+        
+        <!-- Update Completed Form -->
+        <form id="complete_form" method="POST" action="?/updateCompleted" use:enhance>
+            <!-- Custom Checkbox -->
+            <label for="completed-checkbox" class="checkbox-container">
+                <input id="completed-checkbox" type="checkbox" name="completed" bind:checked={taskCompleted} onchange={toggleComplete} hidden/>
+                <span class="checkmark"></span>
+            </label>
+            <input type="text" name="_id" value={taskID} hidden/>
+        </form>
+
         <!-- Delete Button -->
-        <form method="POST" action="/?/deleteTask">
+        <form method="POST" action="/?/deleteTask" use:enhance>
             <input type="hidden" name="_id" value={taskID} />
             <button class="delete-button">
                 <img src={bin} alt="Delete" class="Bin"/>
             </button>
         </form>
+
     </div>
 </div>
-
 <style>
 
     .task {
@@ -40,7 +52,7 @@
     .task-title {
         font-family: "8bit";
         color: var(--foreground);
-        font-size: 1.5vw;
+        font-size: 1.5rem;
         border-radius: 10px;
         padding: 0.5rem;
         line-height: 1.5;
@@ -145,3 +157,5 @@
         box-sizing: border-box;
     }
 </style>
+
+

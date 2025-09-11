@@ -1,9 +1,9 @@
 import client from '$lib/server';
 import type { PageServerLoad, Actions } from './$types';
-import { fail, redirect } from '@sveltejs/kit';
+import { fail} from '@sveltejs/kit';
 
 //gets all tasks 
-export const load: PageServerLoad = async ({ fetch }) => {
+export const load: PageServerLoad = async ({ params}) => {
   const result = await client.GET("/tasks/");
   let todos: typeof result.data = [];
   let success = false;
@@ -17,7 +17,6 @@ export const load: PageServerLoad = async ({ fetch }) => {
     success
 	};
 };
-
 export const actions = {
   //deletes all tasks 
 	delete: async () => {
@@ -29,9 +28,6 @@ export const actions = {
       todos = result.data;
       success = true;
     }
-
-  // after deleting, redirect to base 
-  throw redirect(303, '/');
 	},  
   // add new task 
   create: async (event) => {
@@ -52,8 +48,6 @@ export const actions = {
           userID: "Tom"
         }
       })
-    // after creating, redirect to base 
-    throw redirect(303, '/');
   },
 
   deleteTask: async (event) => {
@@ -65,8 +59,23 @@ export const actions = {
     const result = await client.DELETE('/tasks/{id}', { 
       params: { path: { id } } 
     });
-      // after deleting, redirect to base
-      throw redirect(303, '/');
+  },
+
+  updateCompleted: async ({request}) => {
+    const formData = await request.formData();
+    const id = formData.get('_id')?.toString();
+    const completed = formData.get('completed') === 'on' ? true : false;
+
+    if (completed === null || !id) {
+      return fail(400, { id, completed, missing: true });
+    }
+
+    const result = await client.PATCH(`/tasks/{id}`, {
+      body: {
+        completed
+      },
+      params: { path: { id } }
+    });
   }
 
 } satisfies Actions;
