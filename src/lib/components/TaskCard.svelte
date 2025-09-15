@@ -1,11 +1,12 @@
 <script lang="ts">
-	import { enhance } from '$app/forms';
+	import { enhance, applyAction } from '$app/forms';
+	import { goto } from '$app/navigation';
     let {taskID, taskTitle, taskDescription, taskCompleted}: {taskID: string, taskTitle: string, taskDescription: string, taskCompleted: boolean} = $props();
     import bin from '$lib/assets/bin.svg';
     
-    const toggleComplete = () => {
+    const toggleComplete = (taskID: string) => {
         // Submit the form when the checkbox is toggled
-        const form = document.getElementById('complete_form') as HTMLFormElement;
+        const form = document.getElementById(`complete-form-${taskID}`) as HTMLFormElement;
         form.requestSubmit();
     };
 </script>
@@ -20,17 +21,17 @@
     <div class="togglers">
         
         <!-- Update Completed Form -->
-        <form id="complete_form" method="POST" action="?/updateCompleted" use:enhance>
+        <form id="complete-form-{taskID}" method="POST" action="?/updateCompleted">
             <!-- Custom Checkbox -->
             <label for="checkbox-{taskID}" class="checkbox-container">
-                <input id="checkbox-{taskID}" type="checkbox" name="completed" bind:checked={taskCompleted} onchange={toggleComplete} hidden/>
+                <input id="checkbox-{taskID}" type="checkbox" name="completed" bind:checked={taskCompleted} onchange={() => toggleComplete(taskID)}/>
                 <span class="checkmark"></span>
             </label>
             <input type="text" name="_id" value={taskID} hidden/>
         </form>
 
         <!-- Delete Button -->
-        <form method="POST" action="/?/deleteTask" use:enhance>
+        <form method="POST" action="?/deleteTask" use:enhance>
             <input type="hidden" name="_id" value={taskID} />
             <button class="delete-button">
                 <img src={bin} alt="Delete" class="Bin"/>
@@ -120,7 +121,6 @@
 
     .checkbox-container input {
         position: absolute;
-        opacity: 0;
     }
 
     .checkmark {

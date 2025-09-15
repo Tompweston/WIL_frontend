@@ -1,6 +1,6 @@
 import client from '$lib/server';
 import type { PageServerLoad, Actions } from './$types';
-import { fail} from '@sveltejs/kit';
+import { fail, redirect } from '@sveltejs/kit';
 
 //gets all tasks 
 export const load: PageServerLoad = async ({ params }) => {
@@ -78,6 +78,9 @@ export const actions = {
       },
       params: { path: { id } }
     });
+    return { success: true };
+
+
   }
 
 } satisfies Actions;

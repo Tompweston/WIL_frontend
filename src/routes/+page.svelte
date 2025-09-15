@@ -3,11 +3,21 @@
 	import SidebarButton from '$lib/components/NavbarButton.svelte';
 	import TaskCard from '$lib/components/TaskCard.svelte';
 	import type { PageProps } from './$types';
+	import { enhance } from '$app/forms';
 	let { data, form }: PageProps = $props();
 	let showModal = $state(false);
+    let showcompleted =$state (false);
+	let showincomplete =$state (false);
 	const toggleModal = () => showModal = !showModal;
-	import { enhance } from '$app/forms';
-	
+	const toggleCompleted = () => {
+	showcompleted = !showcompleted;  // toggle this
+	if (showcompleted) showincomplete = false; 
+	};
+	const toggleIncomplete = () => {
+	showincomplete = !showincomplete; 
+	if (showincomplete) showcompleted = false; 
+	};
+
 </script>
 
 
@@ -17,10 +27,10 @@
 		<div class="navbar-buttons">
 			<!-- This label opens the modal by toggling the hidden checkbox -->
 			<!-- <label for="addTaskModal" class="add-button">Add</label> -->
-			<SidebarButton text="Completed" />
-			<SidebarButton text="Incomplete" />
+			<SidebarButton text="Completed" pressed={toggleCompleted} />
+			<SidebarButton text="Incomplete" pressed={toggleIncomplete} />
 			<SidebarButton text="Create" pressed={toggleModal}/>
-			<form method="POST" action="/?/delete" use:enhance>
+			<form method="POST" action="?/delete">
 				<SidebarButton text="Clear All" />
 			</form>
 		</div>
@@ -30,13 +40,18 @@
         
 		<div class="card-grid-wrapper">
 			{#each data.todos as task}
-				{#if task._id}
+				{#if task._id && !showcompleted && !showincomplete}
 					<TaskCard taskTitle={task.title} taskDescription={task.description} taskCompleted={task.completed} taskID={task._id} />
-				{/if}
+				{:else if task._id && showcompleted && task.completed == true}
+					<TaskCard taskTitle={task.title} taskDescription={task.description} taskCompleted={task.completed} taskID={task._id} />
+				{:else if task._id && showincomplete && task.completed == false}
+					<TaskCard taskTitle={task.title} taskDescription={task.description} taskCompleted={task.completed} taskID={task._id} />
+				{/if} 
 			{:else}
 				<p class="no-todos">No Todos Yet! <br /><br /> Add some tasks :)</p>
 			{/each}
 		</div>
+
 	</section>
 
 	{#if showModal}
@@ -52,7 +67,7 @@
 					<button onclick={toggleModal} class="close-button" aria-label="Close">X</button>
 				</header>
 
-				<form method="POST" action="/?/create" use:enhance onsubmit={toggleModal}>
+				<form method="POST" action="?/create" onsubmit={toggleModal} use:enhance>
 					{#if form?.missing}
 						<p class="error">The title & description field is required</p>
 					{/if}
@@ -132,7 +147,6 @@
 		z-index: 1000;
 	}
 
-	/* Clickable dimmed backdrop that closes modal */
 	.backdrop {
 		position: absolute;
 		inset: 0;
