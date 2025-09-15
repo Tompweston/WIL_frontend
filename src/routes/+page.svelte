@@ -6,18 +6,17 @@
 	import { enhance } from '$app/forms';
 	let { data, form }: PageProps = $props();
 	let showModal = $state(false);
-    let showcompleted =$state (false);
-	let showincomplete =$state (false);
+    let showcompleted = $state(false);
+	let showincomplete = $state(false);
 	const toggleModal = () => showModal = !showModal;
 	const toggleCompleted = () => {
-	showcompleted = !showcompleted;  // toggle this
-	if (showcompleted) showincomplete = false; 
+		showcompleted = !showcompleted;  
+		if (showcompleted) showincomplete = false; 
 	};
 	const toggleIncomplete = () => {
-	showincomplete = !showincomplete; 
-	if (showincomplete) showcompleted = false; 
+		showincomplete = !showincomplete; 
+		if (showincomplete) showcompleted = false; 
 	};
-
 </script>
 
 
@@ -27,10 +26,10 @@
 		<div class="navbar-buttons">
 			<!-- This label opens the modal by toggling the hidden checkbox -->
 			<!-- <label for="addTaskModal" class="add-button">Add</label> -->
-			<SidebarButton text="Completed" pressed={toggleCompleted} />
-			<SidebarButton text="Incomplete" pressed={toggleIncomplete} />
-			<SidebarButton text="Create" pressed={toggleModal}/>
-			<form method="POST" action="?/delete">
+			<SidebarButton text="Completed" pressed={toggleCompleted} isActive={showcompleted} />
+			<SidebarButton text="Incomplete" pressed={toggleIncomplete} isActive={showincomplete} />
+			<SidebarButton text="Create" pressed={toggleModal} />
+			<form method="POST" action="?/delete" use:enhance>
 				<SidebarButton text="Clear All" />
 			</form>
 		</div>
@@ -38,7 +37,8 @@
 
 	<section class="content">
         
-		<div class="card-grid-wrapper">
+		<div class="card-grid-wrapper"> 
+			<!-- Populates the page with task elements and also will determin which cards are to be shown based on the state of filters -->
 			{#each data.todos as task}
 				{#if task._id && !showcompleted && !showincomplete}
 					<TaskCard taskTitle={task.title} taskDescription={task.description} taskCompleted={task.completed} taskID={task._id} />
@@ -72,12 +72,12 @@
 						<p class="error">The title & description field is required</p>
 					{/if}
 					<div class="form-inputs">
-						<label>
-							Title
+						<label class="title-label">
+							-Title-
 							<input class="title-input" name="title" type="text" required maxlength="40" />
 						</label>
 						<label class="description-label">
-							Description
+							-Description-
 							<textarea class="description-input" name="description" required maxlength="500"></textarea>
 						</label>
 					</div>
@@ -97,7 +97,6 @@
 		grid-template-rows: 1fr 5fr;
 		width: 100%;
 	}
-	
 
 	.navbar-buttons {
 		display: flex;
@@ -135,8 +134,7 @@
 	.form-inputs {
 		display: flex;
 		flex-direction: column;
-		gap: 2vw;
-		margin-bottom: 2vh;
+		gap: 1rem
 	}
 
 	/* Modal — hidden by default */
@@ -146,6 +144,7 @@
 		inset: 0;
 		z-index: 1000;
 	}
+	
 
 	.backdrop {
 		position: absolute;
@@ -174,6 +173,8 @@
 		justify-content: space-between;
 		margin-bottom: 1rem;
         font-family: "8bit";
+		border-bottom: 2px dashed var(--foreground);
+		line-height: 1.5;
 	}
 
 	.close-button {
@@ -196,6 +197,10 @@
         background-color: var(--cream);
         width: 100%;
 		outline-color: var(--accent);
+		font-family: body;
+		font-size: large;
+		font-weight: bold;
+		color: var(--foreground);
     }
     .no-todos{
         font-family: '8bit';
@@ -206,19 +211,20 @@
         grid-row: 6;
     }
 
-
 	.title-input {
 		height: 2rem;
-		border: 1px solid var(--foreground);
+		border: 2px solid var(--foreground);
 		padding-left: 1rem;
 	}
 
 	textarea {
-        vertical-align: top; 
+        vertical-align: top;
+		color: var(--foreground);
 		font-family: body;
 		font-weight: bold;
+		font-size: large;
 		background-color: var(--cream);
-		border: 1px solid var(--foreground);
+		border: 2px solid var(--foreground);
 		padding: 1rem;
 		outline-color: var(--accent); 
 		scrollbar-color: var(--foreground) var(--contrast);
@@ -227,5 +233,16 @@
 	.description-label {
 		display: flex;
 		flex-direction: column;
+
 	}
+
+	label{
+		gap: 1rem;
+	}
+
+	.title-label{
+		display: flex;
+		flex-direction: column;
+	}
+
 </style>

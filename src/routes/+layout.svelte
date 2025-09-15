@@ -1,6 +1,6 @@
 <script lang="ts">
 	import "../app.css"
-	import logo from '$lib/assets/FinalLogo.png';
+	import logo from '$lib/assets/browntask.png';
 	let { children } = $props();
 </script>
 <head>
@@ -59,7 +59,7 @@
 		margin: 0;
 		text-align: center;
 		text-shadow: 3px 5px 0px var(--peach),
-                 6px 8px 0px var(--blue);
+                 7px 9px 0px #95b8b8;
 		padding: 1rem;
 	}
 

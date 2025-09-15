@@ -78,9 +78,9 @@ export const actions = {
       },
       params: { path: { id } }
     });
+
     return { success: true };
-
-
+    // redirect(303, '/');
   }
 
 } satisfies Actions;

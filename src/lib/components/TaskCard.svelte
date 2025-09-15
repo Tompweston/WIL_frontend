@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { enhance, applyAction } from '$app/forms';
-	import { goto } from '$app/navigation';
+	import { goto, invalidateAll } from '$app/navigation';
     let {taskID, taskTitle, taskDescription, taskCompleted}: {taskID: string, taskTitle: string, taskDescription: string, taskCompleted: boolean} = $props();
     import bin from '$lib/assets/bin.svg';
     
@@ -21,7 +21,17 @@
     <div class="togglers">
         
         <!-- Update Completed Form -->
-        <form id="complete-form-{taskID}" method="POST" action="?/updateCompleted">
+        <form 
+            id="complete-form-{taskID}" 
+            method="POST" 
+            action="?/updateCompleted"
+            use:enhance={() => {
+                return async ({ result }) => {
+                    await invalidateAll();
+                    await applyAction(result);
+                };
+            }}
+        >
             <!-- Custom Checkbox -->
             <label for="checkbox-{taskID}" class="checkbox-container">
                 <input id="checkbox-{taskID}" type="checkbox" name="completed" bind:checked={taskCompleted} onchange={() => toggleComplete(taskID)}/>
