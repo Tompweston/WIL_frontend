@@ -5,10 +5,12 @@
 	import type { PageProps } from './$types';
 	import { enhance } from '$app/forms';
 	let { data, form }: PageProps = $props();
+	let term: string = $state('');
 	let showModal = $state(false);
     let showcompleted = $state(false);
 	let showincomplete = $state(false);
 	const toggleModal = () => showModal = !showModal;
+
 	const toggleCompleted = () => {
 		showcompleted = !showcompleted;  
 		if (showcompleted) showincomplete = false; 
@@ -17,8 +19,16 @@
 		showincomplete = !showincomplete; 
 		if (showincomplete) showcompleted = false; 
 	};
-</script>
 
+
+	const filtered = $derived.by(() => {
+		let tasks = data.todos;
+		let filteredTasks = term.trim()
+			? tasks.filter(task => task.title.toLowerCase().includes(term.toLowerCase()))
+			: tasks
+		return filteredTasks;
+	})
+</script>
 
 <main>
 	<div class="bg"></div>
@@ -32,14 +42,22 @@
 			<form method="POST" action="?/delete" use:enhance>
 				<SidebarButton text="Clear All" />
 			</form>
+			<div>
+				<input
+					class="searchbar"
+					type="text"
+					name="searchterm"
+					placeholder="Search tasks..."
+					bind:value={term}
+				/>
+			</div>
 		</div>
 	</section>
 
 	<section class="content">
-        
 		<div class="card-grid-wrapper"> 
 			<!-- Populates the page with task elements and also will determin which cards are to be shown based on the state of filters -->
-			{#each data.todos as task}
+			{#each filtered as task}
 				{#if task._id && !showcompleted && !showincomplete}
 					<TaskCard taskTitle={task.title} taskDescription={task.description} taskCompleted={task.completed} taskID={task._id} />
 				{:else if task._id && showcompleted && task.completed == true}
@@ -48,10 +66,9 @@
 					<TaskCard taskTitle={task.title} taskDescription={task.description} taskCompleted={task.completed} taskID={task._id} />
 				{/if} 
 			{:else}
-				<p class="no-todos">No Todos Yet! <br /><br /> Add some tasks :)</p>
+				<p class="no-todos">No To-Dos Yet! <br /><br /> Add some tasks :)</p>
 			{/each}
 		</div>
-
 	</section>
 
 	{#if showModal}
@@ -244,5 +261,36 @@
 		display: flex;
 		flex-direction: column;
 	}
+	.searchbar {
+		font-family: '8bit';
+		background: var(--accent);
+		font-size: 1rem;
+		line-height: 1.5;
+		padding: 1rem;
+		border:none;
+		color: var(--cream);
+		width: 100%;
+		height:60%;
+		box-shadow: var(--foreground) 4px 4px;  
+		outline-color: var(--accent);
+		/* border: 2px solid var(--foreground); */
+	}
+
+	.searchbar:focus{
+		box-shadow: var(--foreground) 1px 1px;
+		transform: translate(3px, 3px);
+	}
+
+	input {
+		border: none;
+	}
+	input:focus {
+		outline: none;
+	}
+
+	input::placeholder {
+		color: var(--cream);
+	}
+
 
 </style>

@@ -1,8 +1,9 @@
 <script lang="ts">
-	import "../app.css"
+	import "../app.css";
 	import logo from '$lib/assets/browntask.png';
 	let { children } = $props();
 </script>
+
 <head>
 	<title>Tommy's To-Dos</title>
 </head>
@@ -11,13 +12,13 @@
 	<div>
 		<img src={logo} class="logo" alt="to-do Logo" />
 	</div>
+
 	<h1 class="page-title">My Tasks</h1>
 </header>
 
 <main>
 	{@render children?.()}
 </main>
-
 
 
 <style>
@@ -45,6 +46,11 @@
 		align-items: stretch;
 	}
 
+	header div:nth-child(3) {
+		justify-content: center;
+		padding-right: 1rem;
+	}
+
 	.logo {
 		height: 10vh;
 		will-change: filter;
@@ -53,16 +59,14 @@
 
 	.page-title{
 		font-size: 4.5rem;
-		color: var(--foreground);
+		color: var(--accent);
 		font-family: 'title';
 		font-weight: bolder;
-		margin: 0;
 		text-align: center;
-		text-shadow: 3px 5px 0px var(--peach),
-                 7px 9px 0px #95b8b8;
+	    -webkit-text-stroke: 2px var(--foreground);
+		text-shadow: 5px 4px var(--foreground);
 		padding: 1rem;
-	}
-
+		}
 	
 </style>
 

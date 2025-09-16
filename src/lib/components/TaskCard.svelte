@@ -59,7 +59,7 @@
         grid-template-columns: 9fr 1fr;
         min-width: 25vw;
         min-height: 30vh;
-        box-shadow: 4px 4px var(--foreground);
+        box-shadow: 5px 5px var(--foreground);
     }
 
     .task-title {
@@ -131,6 +131,7 @@
 
     .checkbox-container input {
         position: absolute;
+        opacity: 0;
     }
 
     .checkmark {
@@ -145,6 +146,8 @@
 
     .checkbox-container input:checked ~ .checkmark {
         background-color: var(--accent);
+        box-shadow: 1px 1px var(--foreground);
+        transform: translate(2px, 2px);
     }
 
     .checkmark:after {
