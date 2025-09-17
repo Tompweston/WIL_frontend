@@ -27,12 +27,12 @@
             action="?/updateCompleted"
             use:enhance={() => {
                 return async ({ result }) => {
-                    await invalidateAll();
+                    await invalidateAll(); // fix for ensuring that the form consistently updates the DB after the action without needing a page refresh
                     await applyAction(result);
                 };
             }}
         >
-            <!-- Custom Checkbox -->
+            <!-- Custom Checkbox for completing tasks -->
             <label for="checkbox-{taskID}" class="checkbox-container">
                 <input id="checkbox-{taskID}" type="checkbox" name="completed" bind:checked={taskCompleted} onchange={() => toggleComplete(taskID)}/>
                 <span class="checkmark"></span>

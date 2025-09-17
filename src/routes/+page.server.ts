@@ -19,6 +19,7 @@ export const load: PageServerLoad = async ({ params }) => {
 };
 
 export const actions = {
+
   //deletes all tasks 
 	delete: async () => {
     const result = await client.DELETE("/tasks/")
@@ -31,6 +32,7 @@ export const actions = {
     }
 
 	},  
+
   // add new task 
   create: async (event) => {
     const formData = await event.request.formData();
@@ -52,6 +54,7 @@ export const actions = {
       })
   },
 
+  //delete a specific task by its id
   deleteTask: async (event) => {
     const formData = await event.request.formData();
     const id = formData.get('_id')?.toString();
@@ -63,6 +66,7 @@ export const actions = {
     });
   },
 
+  //update a specific task by its id
   updateCompleted: async ({request}) => {
     const formData = await request.formData();
     const id = formData.get('_id')?.toString();
@@ -71,7 +75,6 @@ export const actions = {
     if (completed === null || !id) {
       return fail(400, { id, completed, missing: true });
     }
-
     const result = await client.PATCH(`/tasks/{id}`, {
       body: {
         completed
@@ -80,7 +83,6 @@ export const actions = {
     });
 
     return { success: true };
-    // redirect(303, '/');
   }
 
 } satisfies Actions;

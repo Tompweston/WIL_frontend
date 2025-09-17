@@ -1,26 +1,36 @@
 <script lang="ts">
+	// ========================Imports==========================
 	import { fade } from 'svelte/transition';
 	import SidebarButton from '$lib/components/NavbarButton.svelte';
 	import TaskCard from '$lib/components/TaskCard.svelte';
 	import type { PageProps } from './$types';
 	import { enhance } from '$app/forms';
+	// //=======================================================
+
+	// ================Variable Declarations====================
 	let { data, form }: PageProps = $props();
 	let term: string = $state('');
 	let showModal = $state(false);
     let showcompleted = $state(false);
 	let showincomplete = $state(false);
+	//==========================================================
+
+	// ======================FUNCTIONS==========================
+
+    // The function to toggle the modal to appear and disappear
 	const toggleModal = () => showModal = !showModal;
 
+	// The function to toggle the completed filter
 	const toggleCompleted = () => {
 		showcompleted = !showcompleted;  
 		if (showcompleted) showincomplete = false; 
 	};
+	// The function to toggle the incomplete filter
 	const toggleIncomplete = () => {
 		showincomplete = !showincomplete; 
 		if (showincomplete) showcompleted = false; 
 	};
-
-
+   // Filter tasks based on search term
 	const filtered = $derived.by(() => {
 		let tasks = data.todos;
 		let filteredTasks = term.trim()
@@ -28,14 +38,14 @@
 			: tasks
 		return filteredTasks;
 	})
+	//===========================================================
 </script>
 
 <main>
 	<div class="bg"></div>
 	<section class="navbar">
-		<div class="navbar-buttons">
-			<!-- This label opens the modal by toggling the hidden checkbox -->
-			<!-- <label for="addTaskModal" class="add-button">Add</label> -->
+		<div class="navbar-buttons"> 
+			<!-- Task manipulation buttons -->
 			<SidebarButton text="Completed" pressed={toggleCompleted} isActive={showcompleted} />
 			<SidebarButton text="Incomplete" pressed={toggleIncomplete} isActive={showincomplete} />
 			<SidebarButton text="Create" pressed={toggleModal} />
@@ -43,6 +53,7 @@
 				<SidebarButton text="Clear All" />
 			</form>
 			<div>
+				<!-- Search Bar -->
 				<input
 					class="searchbar"
 					type="text"
@@ -72,18 +83,18 @@
 	</section>
 
 	{#if showModal}
-		<!-- 2) Modal (shown only when checkbox is checked) -->
+		<!-- Modal (shown only when checkbox is checked) -->
 		<div transition:fade={{duration:100}} class="modal-backdrop">
-			<!-- Clicking the backdrop closes the modal -->
+			<!-- Backdrop to create contrast between modal and content -->
 			<label for="addTaskModal" class="backdrop"></label>
-
+			<!-- Modal Content -->
 			<div class="modal" role="dialog" aria-modal="true" aria-labelledby="addTaskTitle">
 				<header class="modal-header">
 					<h2 class="addTaskTitle">Add Task</h2>
 					<!-- Close button -->
 					<button onclick={toggleModal} class="close-button" aria-label="Close">X</button>
 				</header>
-
+				<!-- The form inside the modal to create a new task -->
 				<form method="POST" action="?/create" onsubmit={toggleModal} use:enhance>
 					{#if form?.missing}
 						<p class="error">The title & description field is required</p>
@@ -154,7 +165,6 @@
 		gap: 1rem
 	}
 
-	/* Modal — hidden by default */
 	.modal-backdrop {
 		display: block;
 		position: fixed;
