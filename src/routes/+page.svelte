@@ -1,74 +1,218 @@
 <script lang="ts">
-    import { onMount } from 'svelte';
-    import SidebarButton from '$lib/components/SidebarButton.svelte';
-    import TaskCard from '$lib/components/TaskCard.svelte';
-
-    type Todo = {
-        title: string;
-        description: string;
-    };
-
-    let todos: Todo[] = [];
-
-    onMount(async () => {
-        const response = await fetch('http://127.0.0.1:8000/tasks/');
-        todos = await response.json();
-    });
+	import { fade } from 'svelte/transition';
+	import SidebarButton from '$lib/components/NavbarButton.svelte';
+	import TaskCard from '$lib/components/TaskCard.svelte';
+	import type { PageProps } from './$types';
+	let { data, form }: PageProps = $props();
+	let showModal = $state(false);
+	const toggleModal = () => showModal = !showModal;
+	import { enhance } from '$app/forms';
+	
 </script>
 
-<main>
 
-    <aside class="sidebar">
-        <div class="sidebar-buttons">
-            <SidebarButton text="Add " />
-            <SidebarButton text="Urgent" />
-            <SidebarButton text="Completed" />
-            <SidebarButton text="Incomplete" />
-            <SidebarButton text="Clear All" />
-        </div>
-    </aside>
-    
-    <section class="content">
-        <div class="card-grid-wrapper">
-            {#if todos.length > 0}
-                {#each todos as todo}
-                    <TaskCard taskTitle={todo.title} taskDescription={todo.description} />
-                {/each}
-            {:else}
-                <p>Loading todos...</p>
-            {/if}
-        </div>
-    </section>
+<main>
+	<div class="bg"></div>
+	<section class="navbar">
+		<div class="navbar-buttons">
+			<!-- This label opens the modal by toggling the hidden checkbox -->
+			<!-- <label for="addTaskModal" class="add-button">Add</label> -->
+			<SidebarButton text="Completed" />
+			<SidebarButton text="Incomplete" />
+			<SidebarButton text="Create" pressed={toggleModal}/>
+			<form method="POST" action="/?/delete" use:enhance>
+				<SidebarButton text="Clear All" />
+			</form>
+		</div>
+	</section>
+
+	<section class="content">
+        
+		<div class="card-grid-wrapper">
+			{#each data.todos as task}
+				{#if task._id}
+					<TaskCard taskTitle={task.title} taskDescription={task.description} taskCompleted={task.completed} taskID={task._id} />
+				{/if}
+			{:else}
+				<p class="no-todos">No Todos Yet! <br /><br /> Add some tasks :)</p>
+			{/each}
+		</div>
+	</section>
+
+	{#if showModal}
+		<!-- 2) Modal (shown only when checkbox is checked) -->
+		<div transition:fade={{duration:100}} class="modal-backdrop">
+			<!-- Clicking the backdrop closes the modal -->
+			<label for="addTaskModal" class="backdrop"></label>
+
+			<div class="modal" role="dialog" aria-modal="true" aria-labelledby="addTaskTitle">
+				<header class="modal-header">
+					<h2 class="addTaskTitle">Add Task</h2>
+					<!-- Close button -->
+					<button onclick={toggleModal} class="close-button" aria-label="Close">X</button>
+				</header>
+
+				<form method="POST" action="/?/create" use:enhance onsubmit={toggleModal}>
+					{#if form?.missing}
+						<p class="error">The title & description field is required</p>
+						event.preventDefault();
+					{/if}
+					<div class="form-inputs">
+						<label>
+							Title
+							<input class="title-input" name="title" type="text" required maxlength="40" />
+						</label>
+						<label class="description-label">
+							Description
+							<textarea class="description-input" name="description" required maxlength="500"></textarea>
+						</label>
+					</div>
+					<div class="modal-actions">
+						<button class="save-button" type="submit">Save</button>
+					</div>
+					
+				</form>
+			</div>
+		</div>
+	{/if}
 </main>
 
 <style>
-    main{
-        display: grid;
-        grid-template-columns: 1fr 5fr;
-        width: 100%;
+	main {
+		display: grid;
+		grid-template-rows: 1fr 5fr;
+		width: 100%;
+	}
+	
+
+	.navbar-buttons {
+		display: flex;
+		flex-direction: row;
+		gap: 4rem;
+		padding: 1rem;
+		justify-content: space-evenly;	
 	}
 
-    .sidebar {
-        border-right: 2px solid var(--foreground);
+	.card-grid-wrapper {
+		display: grid;
+		grid-template-columns: 1fr 1fr 1fr;
+		grid-template-rows: auto;
+		gap: 2vw;
+	}
+	.content { padding: 2vw; }
+
+	.save-button {
+		background-color: var(--yellow);
+		border: 1px solid var(--foreground);
+        color: var(--foreground);
+		padding: 0.5rem 1rem;
+		text-align: center;
+		font-size: 1.5rem;
+		cursor: pointer;
+		font-family: '8bit';
+		box-shadow: var(--foreground) 4px 4px;
+		width: auto;
+		height: 5vh;
+		outline-color: var(--accent);
+	}
+	.save-button:hover { background-color: var(--accent); color: var(--cream); }
+	.save-button:active { box-shadow: var(--foreground) 1px 1px; transform: translate(4px, 4px); }
+
+	.form-inputs {
+		display: flex;
+		flex-direction: column;
+		gap: 2vw;
+		margin-bottom: 2vh;
+	}
+
+	/* Modal — hidden by default */
+	.modal-backdrop {
+		display: block;
+		position: fixed;
+		inset: 0;
+		z-index: 1000;
+	}
+
+	/* Clickable dimmed backdrop that closes modal */
+	.backdrop {
+		position: absolute;
+		inset: 0;
+		background: rgba(0, 0, 0, 0.5);
+	}
+
+	.modal {
+		position: absolute;
+		left: 50%;
+		top: 50%;
+		transform: translate(-50%, -50%);
+		background: var(--background, #fff);
+		color: var(--foreground, #111);
+		border: 1px solid var(--foreground);
+		box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+		padding: 1.25rem;
+		min-width: min(600px, 90vw);
+		box-shadow: 4px 4px var(--foreground);
+		background-color: var(--contrast);
+	}
+
+	.modal-header {
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		margin-bottom: 1rem;
+        font-family: "8bit";
+	}
+
+	.close-button {
+		cursor: pointer;
+        font-family: "8bit";
+        font-weight: bold;
+        font-size: x-large;
+		background-color: transparent;
+		border: none;
+		color: var(--foreground);
+	}
+
+	.modal-actions {
+		margin-top: 1rem;
+		display: flex;
+		justify-content: flex-end;
+		gap: 0.75rem;
+	}
+    input{
+        background-color: var(--cream);
+        width: 100%;
+		outline-color: var(--accent);
+    }
+    .no-todos{
+        font-family: '8bit';
+        font-size: 1.5rem;
+        color: var(--foreground);
+        text-align: center;
+        grid-column: 2;
+        grid-row: 6;
     }
 
-    .sidebar-buttons {
-        display: flex;
-        flex-direction: column;
-        align-items: stretch;
-        gap: 1rem;
-        padding: 1rem;
-    }
 
-    .card-grid-wrapper {
-        display: grid;
-        grid-template-columns: 1fr 1fr 1fr;
-        grid-template-rows: auto;
-        gap: 2vw;
-    }
+	.title-input {
+		height: 2rem;
+		border: 1px solid var(--foreground);
+		padding-left: 1rem;
+	}
 
-    .content {
-        padding: 2vw;
-    }
+	textarea {
+        vertical-align: top; 
+		font-family: body;
+		font-weight: bold;
+		background-color: var(--cream);
+		border: 1px solid var(--foreground);
+		padding: 1rem;
+		outline-color: var(--accent); 
+		scrollbar-color: var(--foreground) var(--contrast);
+	}
+
+	.description-label {
+		display: flex;
+		flex-direction: column;
+	}
 </style>
-

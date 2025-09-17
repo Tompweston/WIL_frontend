@@ -1,25 +1,24 @@
 <script lang="ts">
 	import "../app.css"
-	import logo from '$lib/assets/taskman.png';
+	import logo from '$lib/assets/FinalLogo.png';
 	let { children } = $props();
 </script>
 <head>
-  <title>Tommy's <br> To-Dos</title>
+	<title>Tommy's To-Dos</title>
 </head>
+
 <header>
 	<div>
 		<img src={logo} class="logo" alt="to-do Logo" />
 	</div>
-    <h1 class="page-title">My Tasks</h1>
+	<h1 class="page-title">My Tasks</h1>
 </header>
 
 <main>
 	{@render children?.()}
 </main>
 
-<footer> 
-	Made with ❤️ 
-</footer>
+
 
 <style>
 
@@ -28,6 +27,7 @@
 		grid-template-columns: 1fr 1fr 1fr;
 		border-bottom: 2px solid #614432;
 		width: 100%;
+
 	}
 
 	header div {
@@ -52,23 +52,17 @@
 	}
 
 	.page-title{
-		font-size: 4vw;
-		color: color-mix(in oklab, var(--foreground) 50%, transparent);
+		font-size: 4.5rem;
+		color: var(--foreground);
 		font-family: 'title';
 		font-weight: bolder;
 		margin: 0;
 		text-align: center;
+		text-shadow: 3px 5px 0px var(--peach),
+                 6px 8px 0px var(--blue);
+		padding: 1rem;
 	}
+
 	
-
-	footer {
-        color: var(--foreground);
-		font-size: 1vw;
-		border-top: 2px solid var(--foreground);
-		width: 100%;
-		text-align: center;
-	}
-
-
 </style>
 

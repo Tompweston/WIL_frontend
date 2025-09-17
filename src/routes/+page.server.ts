@@ -1,0 +1,81 @@
+import client from '$lib/server';
+import type { PageServerLoad, Actions } from './$types';
+import { fail} from '@sveltejs/kit';
+
+//gets all tasks 
+export const load: PageServerLoad = async ({ params}) => {
+  const result = await client.GET("/tasks/");
+  let todos: typeof result.data = [];
+  let success = false;
+
+  if (result.data) {
+    todos = result.data;
+    success = true;
+  }
+	return {
+    todos,
+    success
+	};
+};
+export const actions = {
+  //deletes all tasks 
+	delete: async () => {
+    const result = await client.DELETE("/tasks/")
+    let todos: typeof result.data = [];
+    let success = false;
+
+    if (result.data) {
+      todos = result.data;
+      success = true;
+    }
+	},  
+  // add new task 
+  create: async (event) => {
+    const formData = await event.request.formData();
+		const title = formData.get('title')?.toString();
+		const description = formData.get('description')?.toString();
+
+    if (!title || !description) {
+      return fail(400, { title, description: description, missing: true });
+    }
+
+    const result = await client.POST("/tasks/", {
+        body: {
+          title,
+          description,
+          completed: false,
+          urgent: false,  
+          userID: "Tom"
+        }
+      })
+  },
+
+  deleteTask: async (event) => {
+    const formData = await event.request.formData();
+    const id = formData.get('_id')?.toString();
+    if (!id) {
+      return fail(400, { id, missing: true });
+    }
+    const result = await client.DELETE('/tasks/{id}', { 
+      params: { path: { id } } 
+    });
+  },
+
+  updateCompleted: async ({request}) => {
+    const formData = await request.formData();
+    const id = formData.get('_id')?.toString();
+    const completed = formData.get('completed') === 'on' ? true : false;
+
+    if (completed === null || !id) {
+      return fail(400, { id, completed, missing: true });
+    }
+
+    const result = await client.PATCH(`/tasks/{id}`, {
+      body: {
+        completed
+      },
+      params: { path: { id } }
+    });
+  }
+
+} satisfies Actions;
