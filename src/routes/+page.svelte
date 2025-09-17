@@ -16,7 +16,6 @@
 	//==========================================================
 
 	// ======================FUNCTIONS==========================
-
     // The function to toggle the modal to appear and disappear
 	const toggleModal = () => showModal = !showModal;
 

@@ -1,6 +1,6 @@
 <script lang="ts">
 	import "../app.css";
-	import logo from '$lib/assets/browntask.png';
+	import logo from '$lib/assets/TOMMY.png';
 	let { children } = $props();
 </script>
 
@@ -17,6 +17,7 @@
 </header>
 
 <main>
+	<!-- Main content area which is populated in page.svelte -->
 	{@render children?.()}
 </main>
 
@@ -52,9 +53,7 @@
 	}
 
 	.logo {
-		height: 10vh;
-		will-change: filter;
-		transition: filter 300ms, transform 200ms;
+		height: 9rem;
 	}
 
 	.page-title{
