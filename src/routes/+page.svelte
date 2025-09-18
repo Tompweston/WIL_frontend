@@ -5,7 +5,7 @@
 	import TaskCard from '$lib/components/TaskCard.svelte';
 	import type { PageProps } from './$types';
 	import { enhance } from '$app/forms';
-	// //=======================================================
+	//=======================================================
 
 	// ================Variable Declarations====================
 	let { data, form }: PageProps = $props();
@@ -29,7 +29,7 @@
 		showincomplete = !showincomplete; 
 		if (showincomplete) showcompleted = false; 
 	};
-   // Filter tasks based on search term
+    // Filter tasks based on search term
 	const filtered = $derived.by(() => {
 		let tasks = data.todos;
 		let filteredTasks = term.trim()
@@ -282,7 +282,6 @@
 		height:60%;
 		box-shadow: var(--foreground) 4px 4px;  
 		outline-color: var(--accent);
-		/* border: 2px solid var(--foreground); */
 	}
 
 	.searchbar:focus{
@@ -300,6 +299,4 @@
 	input::placeholder {
 		color: var(--cream);
 	}
-
-
 </style>

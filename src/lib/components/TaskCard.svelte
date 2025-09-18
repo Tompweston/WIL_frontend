@@ -1,6 +1,8 @@
 <script lang="ts">
 	import { enhance, applyAction } from '$app/forms';
-	import { goto, invalidateAll } from '$app/navigation';
+	import { invalidateAll } from '$app/navigation';
+    import bin from '$lib/assets/bin.svg';
+    import edit from '$lib/assets/edit4.svg';
 	let {
 		taskID,
 		taskTitle,
@@ -8,19 +10,43 @@
 		taskCompleted
 	}: { taskID: string; taskTitle: string; taskDescription: string; taskCompleted: boolean } =
 		$props();
-	import bin from '$lib/assets/bin.svg';
+    let editable = $state(false);
+    let newTitle = $state(taskTitle);
+    let newDescription = $state(taskDescription);
+
+    const toggleEdit = () => {
+        editable = !editable;
+    };
 
 	const toggleComplete = (taskID: string) => {
 		// Submit the form when the checkbox is toggled
 		const form = document.getElementById(`complete-form-${taskID}`) as HTMLFormElement;
 		form.requestSubmit();
 	};
+
 </script>
 
 <div class="task">
+    
 	<div class="task-content">
-		<h3 class="task-title">{taskTitle}</h3>
-		<p class="task-description">{taskDescription}</p>
+        <h3
+            contenteditable={editable}
+            id={`editable-title-${taskID}`}
+            class="task-title"
+            oninput={(e) => newTitle = e.currentTarget.textContent ?? {taskTitle}}>
+            {taskTitle}
+        </h3>
+
+    <p
+        contenteditable={editable}
+        id={`editable-description-${taskID}`}
+        class="task-description"
+        oninput={(e) => newDescription = e.currentTarget.textContent ?? {taskDescription}}>
+        {taskDescription}
+    </p>
+		<!-- <h3 contenteditable={editable} id={`editable-title-${taskID}`} class="task-title">{taskTitle} </h3>
+		<p contenteditable={editable} id={`editable-description-${taskID}`} class="task-description">{taskDescription}</p> -->
+
 	</div>
 	<div class="togglers">
 		<!-- Update Completed Form -->
@@ -49,6 +75,14 @@
 			<input type="text" name="_id" value={taskID} hidden />
 		</form>
 
+        <!-- Cancel Button -->
+         
+
+        <!-- Edit Button -->
+        <button class="edit-button" onclick={toggleEdit}>
+            <img src={edit} alt="edit" class="edit" />
+        </button>
+
 		<!-- Delete Button -->
 		<form method="POST" action="?/deleteTask" use:enhance>
 			<input type="hidden" name="_id" value={taskID} />
@@ -58,6 +92,8 @@
 		</form>
 	</div>
 </div>
+
+
 
 <style>
 	.task {
@@ -175,8 +211,44 @@
 		height: 0.9vw;
 		border: solid var(--cream);
 		/* small, consistent border widths in vw so scaling matches the box */
-		border-width: 0 0.18vw 0.18vw 0;
+		border-width: 0 0.18rem 0.18rem 0;
 		transform: translate(-50%, -55%) rotate(45deg);
 		box-sizing: border-box;
 	}
+
+    .edit{
+        width: 1.7rem;
+        height: 2rem;
+        cursor: pointer;
+    }
+
+    .edit-button {
+		background-color: var(--yellow);
+		color: var(--foreground);
+		border: none;
+		box-shadow: 3px 3px var(--foreground);
+		cursor: pointer;
+		padding: 0;
+		width: 2.2rem;
+		height: 2.2rem;
+	}
+
+    .edit-button:hover {
+		background-color: var(--accent);
+		color: var(--yellow);
+	}
+
+	.edit-button:active {
+		box-shadow: var(--foreground) 0px 0px;
+		transform: translate(2px, 2px);
+	}
+
+    .task-title:focus {
+		outline: none;
+	}
+    .task-description:focus {
+        outline: none;
+    }
+
+
 </style>

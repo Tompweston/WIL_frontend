@@ -81,5 +81,25 @@ export const actions = {
 		});
 
 		return { success: true };
+	},
+
+  //update a specific task title or description by its id
+	updateTask: async ({ request }) => {
+		const formData = await request.formData();
+		const id = formData.get('_id')?.toString();
+		const title = formData.get('title')?.toString();
+		const description = formData.get('description')?.toString();
+		if (title === null || description === null || !id) {
+			return fail(400, { id, title, description, missing: true });
+		}
+		const result = await client.PATCH(`/tasks/{id}`, {
+			body: {
+				title,
+				description
+			},
+			params: { path: { id } }
+		});
+
+		return { success: true };
 	}
 } satisfies Actions;
