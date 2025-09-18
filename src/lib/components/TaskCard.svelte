@@ -3,19 +3,24 @@
 	import { invalidateAll } from '$app/navigation';
     import bin from '$lib/assets/bin.svg';
     import edit from '$lib/assets/edit4.svg';
+    import submit from '$lib/assets/creamSubmit.svg';
+    import cancel from '$lib/assets/creamCancel.svg';
 	let {
 		taskID,
 		taskTitle,
 		taskDescription,
 		taskCompleted
-	}: { taskID: string; taskTitle: string; taskDescription: string; taskCompleted: boolean } =
+	}: { taskID: string; taskTitle: string; taskDescription: string; taskCompleted: boolean} =
 		$props();
+
     let editable = $state(false);
     let newTitle = $state(taskTitle);
     let newDescription = $state(taskDescription);
 
     const toggleEdit = () => {
         editable = !editable;
+        newTitle = taskTitle; // reset newTitle to current title when toggling edit mode
+        newDescription = taskDescription; // reset newDescription to current description when toggling edit mode
     };
 
 	const toggleComplete = (taskID: string) => {
@@ -24,28 +29,31 @@
 		form.requestSubmit();
 	};
 
+    const cancelEdit = () => {
+        toggleEdit();
+        newTitle = taskTitle; // revert title to original
+        newDescription = taskDescription; // revert description to original
+    };
+
 </script>
 
 <div class="task">
-    
-	<div class="task-content">
+    <div class="task-content">
         <h3
             contenteditable={editable}
             id={`editable-title-${taskID}`}
-            class="task-title"
-            oninput={(e) => newTitle = e.currentTarget.textContent ?? {taskTitle}}>
-            {taskTitle}
-        </h3>
+			class={editable ? 'task-title-edit' : 'task-title'}
+			oninput={(e) => newTitle = e.currentTarget.textContent ?? taskTitle}>
+			{taskTitle}
+		</h3>
 
-    <p
-        contenteditable={editable}
-        id={`editable-description-${taskID}`}
-        class="task-description"
-        oninput={(e) => newDescription = e.currentTarget.textContent ?? {taskDescription}}>
-        {taskDescription}
-    </p>
-		<!-- <h3 contenteditable={editable} id={`editable-title-${taskID}`} class="task-title">{taskTitle} </h3>
-		<p contenteditable={editable} id={`editable-description-${taskID}`} class="task-description">{taskDescription}</p> -->
+        <p
+            contenteditable={editable}
+            id={`editable-description-${taskID}`}
+            class={editable ? 'task-description-edit' : 'task-description'}
+            oninput={(e) => newDescription = e.currentTarget.textContent ?? taskDescription}>
+            {taskDescription}
+        </p>
 
 	</div>
 	<div class="togglers">
@@ -74,26 +82,52 @@
 			</label>
 			<input type="text" name="_id" value={taskID} hidden />
 		</form>
-
-        <!-- Cancel Button -->
          
-
         <!-- Edit Button -->
-        <button class="edit-button" onclick={toggleEdit}>
-            <img src={edit} alt="edit" class="edit" />
-        </button>
+        {#if editable === true}
+            <form
+                id={taskID}
+                method="POST"
+                action="?/updateTask"
+                use:enhance={() => {
+                    return async ({ result }) => {
+                        await invalidateAll(); // fix for ensuring that the form consistently updates the DB after the action without needing a page refresh
+                        await applyAction(result);
+                        editable = false; // exit edit mode after submitting changes
+                    };
+                }}
+            >
+                <input type="text" name="_id" value={taskID} hidden />
+                <input type="text" name="title" value={newTitle} hidden />
+                <input type="text" name="description" value={newDescription} hidden />
+                                <!-- Edit Button -->
+                <div class="edit-buttons">
+                    <button class="submit-button" type="submit">
+                         <img src={submit} alt="submit-icon" class="submit-icon" />
+                    </button>
+                                <!-- Cancel Button -->
+                    <button class="cancel-button" onclick={cancelEdit}>
+                        <img src={cancel} alt="cancel-icon" class="cancel-icon" />
+                    </button>
+                </div>
 
-		<!-- Delete Button -->
+            </form>
+        {:else}
+            <button class="edit-initialiser" onclick={toggleEdit}>
+                <img src={edit} alt="edit-icon" class="edit-icon" />
+            </button>
+        {/if} 
+
+
+		                 <!-- Delete Button -->
 		<form method="POST" action="?/deleteTask" use:enhance>
 			<input type="hidden" name="_id" value={taskID} />
-			<button class="delete-button">
+			<button class="delete-button" disabled={editable}>
 				<img src={bin} alt="Delete" class="Bin" />
 			</button>
 		</form>
 	</div>
 </div>
-
-
 
 <style>
 	.task {
@@ -140,7 +174,7 @@
 		padding: 1rem;
 	}
 
-	/* Delete button */
+	
 	.delete-button {
 		background-color: var(--yellow);
 		color: var(--foreground);
@@ -179,8 +213,8 @@
 	}
 
 	.checkmark {
-		height: 2rem;
-		width: 2rem;
+		height: 2.2rem;
+		width: 2.2rem;
 		background-color: var(--cream);
 		box-shadow: 3px 3px var(--foreground);
 		display: inline-block;
@@ -188,10 +222,15 @@
 		box-sizing: border-box;
 	}
 
+    .checkmark:active {
+        box-shadow: var(--foreground) 1px 1px;
+		transform: translate(2px, 2px);
+    }
+
 	.checkbox-container input:checked ~ .checkmark {
 		background-color: var(--accent);
 		box-shadow: 1px 1px var(--foreground);
-		transform: translate(2px, 2px);
+        transform: translate(2px, 2px);
 	}
 
 	.checkmark:after {
@@ -210,19 +249,18 @@
 		width: 0.45vw;
 		height: 0.9vw;
 		border: solid var(--cream);
-		/* small, consistent border widths in vw so scaling matches the box */
 		border-width: 0 0.18rem 0.18rem 0;
 		transform: translate(-50%, -55%) rotate(45deg);
 		box-sizing: border-box;
 	}
 
-    .edit{
+    .edit-icon {
         width: 1.7rem;
         height: 2rem;
         cursor: pointer;
     }
 
-    .edit-button {
+    .edit-initialiser {
 		background-color: var(--yellow);
 		color: var(--foreground);
 		border: none;
@@ -233,13 +271,13 @@
 		height: 2.2rem;
 	}
 
-    .edit-button:hover {
+    .edit-initialiser:hover {
 		background-color: var(--accent);
 		color: var(--yellow);
 	}
 
-	.edit-button:active {
-		box-shadow: var(--foreground) 0px 0px;
+	.edit-initialiser:active {
+		box-shadow: var(--foreground) 1px 1px;
 		transform: translate(2px, 2px);
 	}
 
@@ -250,5 +288,75 @@
         outline: none;
     }
 
+    .cancel-button{
+        background-color: #f73802;
+        width: 2.2rem;
+		height: 2.2rem;
+        border: none;
+        box-shadow: var(--foreground) 3px 3px;
+        cursor: pointer;
+    }
+    .submit-button{
+        background-color: #019b3d ;
+        width: 2.2rem;
+		height: 2.2rem;
+        border: none;
+        box-shadow: var(--foreground) 3px 3px;
+        cursor: pointer;
+    }
+
+    .submit-button:active, .cancel-button:active{
+        box-shadow: var(--foreground) 1px 1px;
+		transform: translate(2px, 2px);
+    }
+
+    .edit-buttons{
+        display: flex;
+        flex-direction: column;
+        gap: 1rem;
+        margin-top: 1rem;
+        margin-bottom: 1rem;
+    }
+
+    .submit-icon{
+        width: 2rem;
+        height: 2rem;
+        cursor: pointer;
+    }
+
+    .task-title-edit {
+		font-family: '8bit';
+		color: var(--foreground);
+        text-decoration: dashed underline var(--accent);
+		font-size: 1.5rem;
+		border-radius: 10px;
+		padding: 0.5rem;
+		line-height: 1.5;
+		word-wrap: break-word;
+		word-break: break-word;
+		max-width: 100%;
+		box-sizing: border-box;
+	}
+
+	.task-description-edit {
+		font-family: body;
+		color: var(--foreground);
+        text-decoration: dashed underline var(--accent);
+		font-size: 1rem;
+		font-weight: bolder;
+		padding: 0.5rem;
+		white-space: pre-wrap; /* preserve newlines from textarea */
+		word-wrap: break-word;
+		word-break: break-word;
+		max-width: 100%;
+		box-sizing: border-box;
+	}
+
+      .task-title-edit:focus {
+		outline: none;
+	}
+    .task-description-edit:focus {
+        outline: none;
+    }
 
 </style>

@@ -3,6 +3,7 @@
 	import { fade } from 'svelte/transition';
 	import SidebarButton from '$lib/components/NavbarButton.svelte';
 	import TaskCard from '$lib/components/TaskCard.svelte';
+	import editable from '$lib/components/TaskCard.svelte';
 	import type { PageProps } from './$types';
 	import { enhance } from '$app/forms';
 	//=======================================================
@@ -38,6 +39,7 @@
 		return filteredTasks;
 	})
 	//===========================================================
+
 </script>
 
 <main>
@@ -47,10 +49,6 @@
 			<!-- Task manipulation buttons -->
 			<SidebarButton text="Completed" pressed={toggleCompleted} isActive={showcompleted} />
 			<SidebarButton text="Incomplete" pressed={toggleIncomplete} isActive={showincomplete} />
-			<SidebarButton text="Create" pressed={toggleModal} />
-			<form method="POST" action="?/delete" use:enhance>
-				<SidebarButton text="Clear All" />
-			</form>
 			<div>
 				<!-- Search Bar -->
 				<input
@@ -61,6 +59,10 @@
 					bind:value={term}
 				/>
 			</div>
+			<SidebarButton text="Create" pressed={toggleModal} />
+			<form method="POST" action="?/delete" use:enhance>
+				<SidebarButton text="Clear All" />
+			</form>
 		</div>
 	</section>
 
@@ -75,8 +77,8 @@
 				{:else if task._id && showincomplete && task.completed == false}
 					<TaskCard taskTitle={task.title} taskDescription={task.description} taskCompleted={task.completed} taskID={task._id} />
 				{/if} 
-			{:else}
-				<p class="no-todos">No To-Dos Yet! <br /><br /> Add some tasks :)</p>
+				{:else}
+					<p class="no-todos">No To-Dos Yet! <br /><br /> Add some tasks :)</p>
 			{/each}
 		</div>
 	</section>
