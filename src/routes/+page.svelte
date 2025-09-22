@@ -5,6 +5,7 @@
 	import TaskCard from '$lib/components/TaskCard.svelte';
 	import type { PageProps } from './$types';
 	import { enhance } from '$app/forms';
+	import lock from '$lib/assets/lock.svg';
 	//==========================================================
 
 	// ================Variable Declarations====================
@@ -13,7 +14,7 @@
 	let showModal = $state(false);
 	let showcompleted = $state(false);
 	let showincomplete = $state(false);
-	let editable = $state(false);
+	let editon = $state(false);
 	//==========================================================
 
 	// ======================FUNCTIONS==========================
@@ -50,13 +51,21 @@
 			<SidebarButton text="Incomplete" pressed={toggleIncomplete} isActive={showincomplete} />
 			<div>
 				<!-- Search Bar -->
-				<input
+				{#if editon}
+				<div class="lock-container">
+					<img src={lock} alt="Locked" class="lock" />
+				</div>
+				{:else}
+					<input
 					class="searchbar"
 					type="text"
 					name="searchterm"	
 					placeholder="Search tasks..."
 					bind:value={term}
+					disabled={editon}
 				/>
+				{/if}
+				
 			</div>
 			<SidebarButton text="Create" pressed={toggleModal} />
 			<form method="POST" action="?/delete" use:enhance>
@@ -66,7 +75,6 @@
 	</section>
 
 	<section class="content">
-		{editable}
 		<div class="card-grid-wrapper">
 			<!-- Populates the page with task elements and also will determin which cards are to be shown based on the state of filters -->
 			{#each filtered as task}
@@ -76,7 +84,7 @@
 						taskDescription={task.description}
 						taskCompleted={task.completed}
 						taskID={task._id}
-						bind:editable={editable}
+						bind:editon={editon}
 					/>
 				{:else if task._id && showcompleted && task.completed == true}
 					<TaskCard
@@ -94,7 +102,7 @@
 					/>
 				{/if}
 			{:else}
-				<p class="no-todos">No To-Dos Yet! <br /><br /> Add some tasks :)</p>
+				<p class="no-todos">No Tasks Found! </p>
 			{/each}
 		</div>
 	</section>
@@ -329,4 +337,18 @@
 	input::placeholder {
 		color: var(--foreground);
 	}
+	.lock{
+		width: 2rem;
+		height: 2.5rem;
+		margin-top: 0.1rem;
+	}
+	.lock-container{
+		width: 22rem;
+		height: 2rem;
+		padding: 1rem;
+		display: flex;
+		justify-content: center;
+		align-items: center;
+	}
+	
 </style>

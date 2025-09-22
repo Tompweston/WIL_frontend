@@ -6,18 +6,20 @@
 	import edit from '$lib/assets/edit4.svg';
 	import submit from '$lib/assets/creamSubmit.svg';
 	import cancel from '$lib/assets/creamCancel.svg';
+	import lock from '$lib/assets/lock.svg';
 	//===============================================================
 
 	// ========================Declarations==========================
+	
 	let {
 		taskID,
 		taskTitle,
 		taskDescription,
 		taskCompleted,
-		editable = $bindable<boolean>(false)
-	}: { taskID: string; taskTitle: string; taskDescription: string; taskCompleted: boolean; editable?: boolean } =
+		editon = $bindable<boolean>(false)
+	}: { taskID: string; taskTitle: string; taskDescription: string; taskCompleted: boolean; editon?: boolean } =
 		$props();
-
+	let editable = $state(false);
 	let newTitle = $state(taskTitle);
 	let newDescription = $state(taskDescription);
 	//================================================================
@@ -26,6 +28,7 @@
 	const toggleEdit = () => {
 		console.log('bang')
 		editable = !editable;
+		editon = editable;
 	};
 
 	const toggleComplete = (taskID: string) => {
@@ -123,15 +126,24 @@
 			</form>
 		{:else}
 		<!-- Edit Button -->
-			<button class="edit-initialiser" onclick={toggleEdit}>
-				<img src={edit} alt="edit-icon" class="edit-icon" />
+			<button class="edit-initialiser" onclick={toggleEdit} disabled={editon}>
+				{#if editon}
+					<img src={lock} alt="Locked" class="Locked" />
+				{:else}
+					<img src={edit} alt="edit-icon" class="edit-icon" />
+				{/if}
+				
 			</button>
 		{/if}
 		<!-- Delete Button -->
 		<form method="POST" action="?/deleteTask" use:enhance>
 			<input type="hidden" name="_id" value={taskID} />
-			<button class="delete-button" disabled={editable}>
-				<img src={bin} alt="Delete" class="Bin" />
+			<button class="delete-button" disabled={editon}>
+				{#if editon}
+					<img src={lock} alt="Locked" class="Locked" />
+				{:else}
+					<img src={bin} alt="Delete" class="Bin" />
+				{/if}
 			</button>
 		</form>
 	</div>
@@ -365,5 +377,9 @@
 	}
 	.task-description-edit:focus {
 		outline: none;
+	}
+	.Locked {
+		width: 2rem;
+		height: 2rem;
 	}
 </style>
