@@ -25,7 +25,7 @@
 	header {
 		display: grid;
 		grid-template-columns: 1fr 1fr 1fr;
-		border-bottom: 2px solid #614432;
+		border-bottom: 2px solid var(--foreground);
 		width: 100%;
 	}
 

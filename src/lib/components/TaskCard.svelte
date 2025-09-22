@@ -13,17 +13,18 @@
 		taskID,
 		taskTitle,
 		taskDescription,
-		taskCompleted
-	}: { taskID: string; taskTitle: string; taskDescription: string; taskCompleted: boolean } =
+		taskCompleted,
+		editable = $bindable<boolean>(false)
+	}: { taskID: string; taskTitle: string; taskDescription: string; taskCompleted: boolean; editable?: boolean } =
 		$props();
 
-	let editable = $state(false);
 	let newTitle = $state(taskTitle);
 	let newDescription = $state(taskDescription);
 	//================================================================
 
 	//========================FUNCTIONS===============================
 	const toggleEdit = () => {
+		console.log('bang')
 		editable = !editable;
 	};
 
@@ -102,14 +103,14 @@
 					return async ({ result }) => {
 						await invalidateAll(); // fix for ensuring that the form consistently updates the DB after the action without needing a page refresh
 						await applyAction(result);
-						editable = false; // exit edit mode after submitting changes
+						toggleEdit() // exit edit mode after submitting changes
 					};
 				}}
 			>
 				<input type="text" name="_id" value={taskID} hidden />
 				<input type="text" name="title" value={newTitle} maxlength="40" hidden />
 				<input type="text" name="description" value={newDescription} maxlength="500" hidden />
-				<!-- Edit Button -->
+				<!-- Submit Button -->
 				<div class="edit-buttons">
 					<button class="submit-button" type="submit">
 						<img src={submit} alt="submit-icon" class="submit-icon" />
@@ -121,6 +122,7 @@
 				</div>
 			</form>
 		{:else}
+		<!-- Edit Button -->
 			<button class="edit-initialiser" onclick={toggleEdit}>
 				<img src={edit} alt="edit-icon" class="edit-icon" />
 			</button>

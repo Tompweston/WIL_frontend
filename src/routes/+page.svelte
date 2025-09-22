@@ -13,6 +13,7 @@
 	let showModal = $state(false);
 	let showcompleted = $state(false);
 	let showincomplete = $state(false);
+	let editable = $state(false);
 	//==========================================================
 
 	// ======================FUNCTIONS==========================
@@ -52,7 +53,7 @@
 				<input
 					class="searchbar"
 					type="text"
-					name="searchterm"
+					name="searchterm"	
 					placeholder="Search tasks..."
 					bind:value={term}
 				/>
@@ -65,6 +66,7 @@
 	</section>
 
 	<section class="content">
+		{editable}
 		<div class="card-grid-wrapper">
 			<!-- Populates the page with task elements and also will determin which cards are to be shown based on the state of filters -->
 			{#each filtered as task}
@@ -74,6 +76,7 @@
 						taskDescription={task.description}
 						taskCompleted={task.completed}
 						taskID={task._id}
+						bind:editable={editable}
 					/>
 				{:else if task._id && showcompleted && task.completed == true}
 					<TaskCard
@@ -293,31 +296,37 @@
 	}
 	.searchbar {
 		font-family: '8bit';
-		background: var(--accent);
+		background: transparent;
 		font-size: 1rem;
 		line-height: 1.5;
 		padding: 1rem;
-		border: none;
-		color: var(--cream);
+		border: 2px solid var(--foreground);
+		color: var(--foreground);
 		width: 100%;
 		height: 60%;
-		box-shadow: var(--foreground) 4px 4px;
+		/* box-shadow: var(--foreground) 4px 4px; */
 		outline-color: var(--accent);
 	}
 
 	.searchbar:focus {
-		box-shadow: var(--foreground) 1px 1px;
-		transform: translate(3px, 3px);
+		outline: none;
+		background-color: var(--accent);
+		color: var(--cream);
 	}
 
 	input {
 		border: none;
 	}
+
 	input:focus {
 		outline: none;
 	}
 
-	input::placeholder {
+	.searchbar:focus::placeholder {
 		color: var(--cream);
+	}
+
+	input::placeholder {
+		color: var(--foreground);
 	}
 </style>
