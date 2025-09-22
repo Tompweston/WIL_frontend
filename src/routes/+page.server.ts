@@ -83,7 +83,7 @@ export const actions = {
 		return { success: true };
 	},
 
-  //update a specific task title or description by its id
+	//update a specific task title or description by its id
 	updateTask: async ({ request }) => {
 		const formData = await request.formData();
 		const id = formData.get('_id')?.toString();

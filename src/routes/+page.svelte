@@ -3,49 +3,47 @@
 	import { fade } from 'svelte/transition';
 	import SidebarButton from '$lib/components/NavbarButton.svelte';
 	import TaskCard from '$lib/components/TaskCard.svelte';
-	import editable from '$lib/components/TaskCard.svelte';
 	import type { PageProps } from './$types';
 	import { enhance } from '$app/forms';
-	//=======================================================
+	//==========================================================
 
 	// ================Variable Declarations====================
 	let { data, form }: PageProps = $props();
 	let term: string = $state('');
 	let showModal = $state(false);
-    let showcompleted = $state(false);
+	let showcompleted = $state(false);
 	let showincomplete = $state(false);
 	//==========================================================
 
 	// ======================FUNCTIONS==========================
-    // The function to toggle the modal to appear and disappear
-	const toggleModal = () => showModal = !showModal;
+	// The function to toggle the modal to appear and disappear
+	const toggleModal = () => (showModal = !showModal);
 
 	// The function to toggle the completed filter
 	const toggleCompleted = () => {
-		showcompleted = !showcompleted;  
-		if (showcompleted) showincomplete = false; 
+		showcompleted = !showcompleted;
+		if (showcompleted) showincomplete = false;
 	};
 	// The function to toggle the incomplete filter
 	const toggleIncomplete = () => {
-		showincomplete = !showincomplete; 
-		if (showincomplete) showcompleted = false; 
+		showincomplete = !showincomplete;
+		if (showincomplete) showcompleted = false;
 	};
-    // Filter tasks based on search term
+	// Filter tasks based on search term
 	const filtered = $derived.by(() => {
 		let tasks = data.todos;
 		let filteredTasks = term.trim()
-			? tasks.filter(task => task.title.toLowerCase().includes(term.toLowerCase()))
-			: tasks
+			? tasks.filter((task) => task.title.toLowerCase().includes(term.toLowerCase()))
+			: tasks;
 		return filteredTasks;
-	})
+	});
 	//===========================================================
-
 </script>
 
 <main>
 	<div class="bg"></div>
 	<section class="navbar">
-		<div class="navbar-buttons"> 
+		<div class="navbar-buttons">
 			<!-- Task manipulation buttons -->
 			<SidebarButton text="Completed" pressed={toggleCompleted} isActive={showcompleted} />
 			<SidebarButton text="Incomplete" pressed={toggleIncomplete} isActive={showincomplete} />
@@ -67,25 +65,40 @@
 	</section>
 
 	<section class="content">
-		<div class="card-grid-wrapper"> 
+		<div class="card-grid-wrapper">
 			<!-- Populates the page with task elements and also will determin which cards are to be shown based on the state of filters -->
 			{#each filtered as task}
 				{#if task._id && !showcompleted && !showincomplete}
-					<TaskCard taskTitle={task.title} taskDescription={task.description} taskCompleted={task.completed} taskID={task._id} />
+					<TaskCard
+						taskTitle={task.title}
+						taskDescription={task.description}
+						taskCompleted={task.completed}
+						taskID={task._id}
+					/>
 				{:else if task._id && showcompleted && task.completed == true}
-					<TaskCard taskTitle={task.title} taskDescription={task.description} taskCompleted={task.completed} taskID={task._id} />
+					<TaskCard
+						taskTitle={task.title}
+						taskDescription={task.description}
+						taskCompleted={task.completed}
+						taskID={task._id}
+					/>
 				{:else if task._id && showincomplete && task.completed == false}
-					<TaskCard taskTitle={task.title} taskDescription={task.description} taskCompleted={task.completed} taskID={task._id} />
-				{/if} 
-				{:else}
-					<p class="no-todos">No To-Dos Yet! <br /><br /> Add some tasks :)</p>
+					<TaskCard
+						taskTitle={task.title}
+						taskDescription={task.description}
+						taskCompleted={task.completed}
+						taskID={task._id}
+					/>
+				{/if}
+			{:else}
+				<p class="no-todos">No To-Dos Yet! <br /><br /> Add some tasks :)</p>
 			{/each}
 		</div>
 	</section>
 
 	{#if showModal}
 		<!-- Modal (shown only when checkbox is checked) -->
-		<div transition:fade={{duration:100}} class="modal-backdrop">
+		<div transition:fade={{ duration: 100 }} class="modal-backdrop">
 			<!-- Backdrop to create contrast between modal and content -->
 			<label for="addTaskModal" class="backdrop"></label>
 			<!-- Modal Content -->
@@ -107,13 +120,13 @@
 						</label>
 						<label class="description-label">
 							-Description-
-							<textarea class="description-input" name="description" required maxlength="500"></textarea>
+							<textarea class="description-input" name="description" required maxlength="500"
+							></textarea>
 						</label>
 					</div>
 					<div class="modal-actions">
 						<button class="save-button" type="submit">Save</button>
 					</div>
-					
 				</form>
 			</div>
 		</div>
@@ -132,7 +145,7 @@
 		flex-direction: row;
 		gap: 4rem;
 		padding: 1rem;
-		justify-content: space-evenly;	
+		justify-content: space-evenly;
 	}
 
 	.card-grid-wrapper {
@@ -141,12 +154,14 @@
 		grid-template-rows: auto;
 		gap: 2vw;
 	}
-	.content { padding: 2vw; }
+	.content {
+		padding: 2vw;
+	}
 
 	.save-button {
 		background-color: var(--yellow);
 		border: 1px solid var(--foreground);
-        color: var(--foreground);
+		color: var(--foreground);
 		padding: 0.5rem 1rem;
 		text-align: center;
 		font-size: 1.5rem;
@@ -157,13 +172,19 @@
 		height: 5vh;
 		outline-color: var(--accent);
 	}
-	.save-button:hover { background-color: var(--accent); color: var(--cream); }
-	.save-button:active { box-shadow: var(--foreground) 1px 1px; transform: translate(4px, 4px); }
+	.save-button:hover {
+		background-color: var(--accent);
+		color: var(--cream);
+	}
+	.save-button:active {
+		box-shadow: var(--foreground) 1px 1px;
+		transform: translate(4px, 4px);
+	}
 
 	.form-inputs {
 		display: flex;
 		flex-direction: column;
-		gap: 1rem
+		gap: 1rem;
 	}
 
 	.modal-backdrop {
@@ -172,7 +193,6 @@
 		inset: 0;
 		z-index: 1000;
 	}
-	
 
 	.backdrop {
 		position: absolute;
@@ -188,7 +208,7 @@
 		background: var(--background, #fff);
 		color: var(--foreground, #111);
 		border: 1px solid var(--foreground);
-		box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+		box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
 		padding: 1.25rem;
 		min-width: min(600px, 90vw);
 		box-shadow: 4px 4px var(--foreground);
@@ -200,16 +220,16 @@
 		align-items: center;
 		justify-content: space-between;
 		margin-bottom: 1rem;
-        font-family: "8bit";
+		font-family: '8bit';
 		border-bottom: 2px dashed var(--foreground);
 		line-height: 1.5;
 	}
 
 	.close-button {
 		cursor: pointer;
-        font-family: "8bit";
-        font-weight: bold;
-        font-size: x-large;
+		font-family: '8bit';
+		font-weight: bold;
+		font-size: x-large;
 		background-color: transparent;
 		border: none;
 		color: var(--foreground);
@@ -221,23 +241,23 @@
 		justify-content: flex-end;
 		gap: 0.75rem;
 	}
-    input{
-        background-color: var(--cream);
-        width: 100%;
+	input {
+		background-color: var(--cream);
+		width: 100%;
 		outline-color: var(--accent);
 		font-family: body;
 		font-size: large;
 		font-weight: bold;
 		color: var(--foreground);
-    }
-    .no-todos{
-        font-family: '8bit';
-        font-size: 1.5rem;
-        color: var(--foreground);
-        text-align: center;
-        grid-column: 2;
-        grid-row: 6;
-    }
+	}
+	.no-todos {
+		font-family: '8bit';
+		font-size: 1.5rem;
+		color: var(--foreground);
+		text-align: center;
+		grid-column: 2;
+		grid-row: 6;
+	}
 
 	.title-input {
 		height: 2rem;
@@ -246,7 +266,7 @@
 	}
 
 	textarea {
-        vertical-align: top;
+		vertical-align: top;
 		color: var(--foreground);
 		font-family: body;
 		font-weight: bold;
@@ -254,21 +274,20 @@
 		background-color: var(--cream);
 		border: 2px solid var(--foreground);
 		padding: 1rem;
-		outline-color: var(--accent); 
+		outline-color: var(--accent);
 		scrollbar-color: var(--foreground) var(--contrast);
 	}
 
 	.description-label {
 		display: flex;
 		flex-direction: column;
-
 	}
 
-	label{
+	label {
 		gap: 1rem;
 	}
 
-	.title-label{
+	.title-label {
 		display: flex;
 		flex-direction: column;
 	}
@@ -278,15 +297,15 @@
 		font-size: 1rem;
 		line-height: 1.5;
 		padding: 1rem;
-		border:none;
+		border: none;
 		color: var(--cream);
 		width: 100%;
-		height:60%;
-		box-shadow: var(--foreground) 4px 4px;  
+		height: 60%;
+		box-shadow: var(--foreground) 4px 4px;
 		outline-color: var(--accent);
 	}
 
-	.searchbar:focus{
+	.searchbar:focus {
 		box-shadow: var(--foreground) 1px 1px;
 		transform: translate(3px, 3px);
 	}

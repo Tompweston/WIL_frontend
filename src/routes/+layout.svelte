@@ -1,5 +1,5 @@
 <script lang="ts">
-	import "../app.css";
+	import '../app.css';
 	import logo from '$lib/assets/TOMMY.png';
 	let { children } = $props();
 </script>
@@ -21,15 +21,12 @@
 	{@render children?.()}
 </main>
 
-
 <style>
-
 	header {
 		display: grid;
 		grid-template-columns: 1fr 1fr 1fr;
 		border-bottom: 2px solid #614432;
 		width: 100%;
-
 	}
 
 	header div {
@@ -56,16 +53,14 @@
 		height: 9rem;
 	}
 
-	.page-title{
+	.page-title {
 		font-size: 4.5rem;
 		color: var(--accent);
 		font-family: 'title';
 		font-weight: bolder;
 		text-align: center;
-	    -webkit-text-stroke: 2px var(--foreground);
+		-webkit-text-stroke: 2px var(--foreground);
 		text-shadow: 5px 4px var(--foreground);
 		padding: 1rem;
-		}
-	
+	}
 </style>
-
