@@ -35,8 +35,14 @@
 	const filtered = $derived.by(() => {
 		let tasks = data.todos;
 		let filteredTasks = term.trim()
-			? tasks.filter((task) => task.title.toLowerCase().includes(term.toLowerCase()))
+			? tasks.filter((task) => task.title.toLowerCase().includes(term.toLowerCase()) || task.description.toLowerCase().includes(term.toLowerCase()))
 			: tasks;
+		if (showcompleted) {
+			filteredTasks = filteredTasks.filter((task) => task.completed);
+		}
+		if (showincomplete) {
+			filteredTasks = filteredTasks.filter((task) => !task.completed);
+		}
 		return filteredTasks;
 	});
 	//===========================================================
@@ -46,31 +52,29 @@
 	<div class="bg"></div>
 	<section class="navbar">
 		<div class="navbar-buttons">
-			<!-- Task manipulation buttons -->
-			<SidebarButton text="Completed" pressed={toggleCompleted} isActive={showcompleted} />
-			<SidebarButton text="Incomplete" pressed={toggleIncomplete} isActive={showincomplete} />
-			<div>
 				<!-- Search Bar -->
-				{#if editon}
+			{#if editon}
 				<div class="lock-container">
 					<img src={lock} alt="Locked" class="lock" />
 				</div>
-				{:else}
+			{:else}
+				<SidebarButton text="Completed" pressed={toggleCompleted} isActive={showcompleted} />
+				<SidebarButton text="Incomplete" pressed={toggleIncomplete} isActive={showincomplete} />
+				<div>
 					<input
-					class="searchbar"
-					type="text"
-					name="searchterm"	
-					placeholder="Search tasks..."
-					bind:value={term}
-					disabled={editon}
-				/>
-				{/if}
-				
-			</div>
-			<SidebarButton text="Create" pressed={toggleModal} />
-			<form method="POST" action="?/delete" use:enhance>
-				<SidebarButton text="Clear All" />
-			</form>
+						class="searchbar"
+						type="text"
+						name="searchterm"	
+						placeholder="Search tasks..."
+						bind:value={term}
+						disabled={editon}
+					/>
+				</div>
+				<SidebarButton text="Create" pressed={toggleModal} />
+				<form method="POST" action="?/delete" use:enhance>
+					<SidebarButton text="Clear All" />
+				</form>
+			{/if}
 		</div>
 	</section>
 
@@ -78,27 +82,13 @@
 		<div class="card-grid-wrapper">
 			<!-- Populates the page with task elements and also will determin which cards are to be shown based on the state of filters -->
 			{#each filtered as task}
-				{#if task._id && !showcompleted && !showincomplete}
+				{#if task._id}
 					<TaskCard
 						taskTitle={task.title}
 						taskDescription={task.description}
 						taskCompleted={task.completed}
 						taskID={task._id}
 						bind:editon={editon}
-					/>
-				{:else if task._id && showcompleted && task.completed == true}
-					<TaskCard
-						taskTitle={task.title}
-						taskDescription={task.description}
-						taskCompleted={task.completed}
-						taskID={task._id}
-					/>
-				{:else if task._id && showincomplete && task.completed == false}
-					<TaskCard
-						taskTitle={task.title}
-						taskDescription={task.description}
-						taskCompleted={task.completed}
-						taskID={task._id}
 					/>
 				{/if}
 			{:else}
@@ -157,6 +147,7 @@
 		gap: 4rem;
 		padding: 1rem;
 		justify-content: space-evenly;
+		border-bottom: 2px solid var(--foreground);
 	}
 
 	.card-grid-wrapper {
@@ -311,7 +302,7 @@
 		border: 2px solid var(--foreground);
 		color: var(--foreground);
 		width: 100%;
-		height: 60%;
+		height: 20%;
 		/* box-shadow: var(--foreground) 4px 4px; */
 		outline-color: var(--accent);
 	}
@@ -339,16 +330,9 @@
 	}
 	.lock{
 		width: 2rem;
-		height: 2.5rem;
-		margin-top: 0.1rem;
+		height: 3rem;
+		padding-bottom: 1rem;
 	}
-	.lock-container{
-		width: 22rem;
-		height: 2rem;
-		padding: 1rem;
-		display: flex;
-		justify-content: center;
-		align-items: center;
-	}
+	
 	
 </style>

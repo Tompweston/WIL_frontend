@@ -71,6 +71,12 @@
 	</div>
 	<div class="togglers">
 		<!-- Update Completed Form -->
+		{#if editon}
+		    <div class="checkbox-locked">
+				<img src={lock} alt="Locked" class="Locked" />
+			</div>
+		{:else}
+				
 		<form
 			id="complete-form-{taskID}"
 			method="POST"
@@ -83,6 +89,7 @@
 			}}
 		>
 			<!-- Custom Checkbox for completing tasks -->
+			 
 			<label for="checkbox-{taskID}" class="checkbox-container">
 				<input
 					id="checkbox-{taskID}"
@@ -95,6 +102,7 @@
 			</label>
 			<input type="text" name="_id" value={taskID} hidden />
 		</form>
+		{/if}
 
 		<!-- Edit Button -->
 		{#if editable === true}
@@ -381,5 +389,15 @@
 	.Locked {
 		width: 2rem;
 		height: 2rem;
+	}
+	.checkbox-locked {
+		height: 2.2rem;
+		width: 2.2rem;
+		background-color: var(--cream);
+		box-shadow: 3px 3px var(--foreground);
+		box-sizing: border-box;
+		display: flex;
+		justify-content: center;
+		align-items: center;
 	}
 </style>

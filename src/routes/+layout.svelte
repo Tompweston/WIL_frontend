@@ -55,12 +55,13 @@
 
 	.page-title {
 		font-size: 4.5rem;
-		color: var(--accent);
+		color: var(--yellow);
 		font-family: 'title';
 		font-weight: bolder;
 		text-align: center;
 		-webkit-text-stroke: 2px var(--foreground);
 		text-shadow: 5px 4px var(--foreground);
+		text-decoration: underline 10px var(--accent);
 		padding: 1rem;
 	}
 </style>
