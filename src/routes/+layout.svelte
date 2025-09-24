@@ -41,6 +41,7 @@
 	header div:nth-child(1) {
 		justify-content: start;
 		padding-left: 1rem;
+		align-items: end;
 	}
 
 	header div:nth-child(2) {
@@ -53,7 +54,7 @@
 	}
 
 	.logo {
-		height: 9rem;
+		height: 8rem;
 	}
 
 	.page-title {

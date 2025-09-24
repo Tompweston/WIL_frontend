@@ -56,17 +56,7 @@
 
 <main>
 	<nav class="navbar">
-		<!-- Search Bar -->
-		<div>
-			<input
-				class="searchbar"
-				type="text"
-				name="searchterm"
-				placeholder="Search tasks..."
-				bind:value={term}
-				disabled={editon}
-			/>
-		</div>
+		
 		<!-- Completed Filter Button -->
 		<SidebarButton
 			text="Completed"
@@ -88,6 +78,18 @@
 		<form method="POST" action="?/delete" use:enhance>
 			<SidebarButton text="Clear All" disabled={editon} />
 		</form>
+
+		<!-- Search Bar -->
+		<div>
+			<input
+				class="searchbar"
+				type="text"
+				name="searchterm"
+				placeholder="Search tasks..."
+				bind:value={term}
+				disabled={editon}
+			/>
+		</div>
 	</nav>
 
 	<!-- Content Area -->
@@ -235,6 +237,7 @@
 		transform: translate(4px, 4px);
 	}
 
+
 	.form-inputs {
 		display: flex;
 		flex-direction: column;
@@ -322,6 +325,10 @@
 		scrollbar-color: var(--foreground) var(--contrast);
 	}
 
+	textarea:focus {
+		outline: none;
+	}
+
 	.description-label {
 		display: flex;
 		flex-direction: column;
@@ -376,6 +383,8 @@
 	input::placeholder {
 		color: var(--foreground);
 	}
+
+	/* Error Popup styling */
 
 	.error-message {
 		font-family: 'title';

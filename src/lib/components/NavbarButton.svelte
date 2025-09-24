@@ -12,10 +12,9 @@
 		pressed?: VoidFunction;
 	} = $props();
 
-	// let isActive = $state(false);
 </script>
-
-<button onclick={() => (pressed ? pressed() : null)} class:isActive {disabled} class="sidebar-btn">
+<!-- Navbar Button Component state control for being locked/unlocked -->
+<button onclick={() => (pressed ? pressed() : null)} class:isActive {disabled} class="navbar-btn">
 	{#if disabled === true}
 		<img src={lock} alt="Locked" class="lock" />
 	{:else}
@@ -24,7 +23,8 @@
 </button>
 
 <style>
-	.sidebar-btn {
+	/* Navbar Button Styling */
+	.navbar-btn {
 		background-color: var(--yellow);
 		border: none;
 		padding: 0.5rem 1rem;
@@ -38,22 +38,26 @@
 		height: 2rem;
 	}
 
-	.sidebar-btn:hover {
+	.navbar-btn:hover {
 		background-color: var(--accent);
 		color: var(--cream);
 	}
 
-	.sidebar-btn:active {
+	.navbar-btn:active {
 		box-shadow: var(--foreground) 1px 1px;
 		transform: translate(4px, 4px);
 	}
+
+	/* Active State Styling */
 	.isActive {
 		background-color: var(--accent);
 		color: var(--cream);
 		transform: translate(2px, 2px);
 		box-shadow: var(--foreground) 2px 2px;
 	}
-	.sidebar-btn:disabled {
+
+	/* Disabled State Styling */
+	.navbar-btn:disabled {
 		opacity: 0.5;
 		cursor: not-allowed;
 		background-color: #c3850b;

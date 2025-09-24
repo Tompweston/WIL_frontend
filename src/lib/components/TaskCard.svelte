@@ -17,14 +17,8 @@
 		taskCompleted,
 		editon = $bindable<boolean>(false),
 		badInput = $bindable<boolean>(false)
-	}: {
-		taskID: string;
-		taskTitle: string;
-		taskDescription: string;
-		taskCompleted: boolean;
-		editon?: boolean;
-		badInput?: boolean;
-	} = $props();
+	}: { taskID: string; taskTitle: string; taskDescription: string; taskCompleted: boolean; editon?: boolean; badInput?: boolean; } =
+		$props();
 	let editable = $state(false);
 	let newTitle = $state(taskTitle);
 	let newDescription = $state(taskDescription);
@@ -36,12 +30,13 @@
 		editon = editable;
 	};
 
+	// Submit the form when the checkbox is toggled
 	const toggleComplete = (taskID: string) => {
-		// Submit the form when the checkbox is toggled
 		const form = document.getElementById(`complete-form-${taskID}`) as HTMLFormElement;
 		form.requestSubmit();
 	};
 
+	// Cancel editing and revert to original values
 	const cancelEdit = () => {
 		toggleEdit();
 		taskTitle = taskTitle; // revert title to original
@@ -51,17 +46,18 @@
 		badInput = false;
 	};
 
+	// Check inputs for validity before enabling submit button
 	const checkInputs = () => {
-		if (newTitle.length > 40) {
+		if (newTitle.length > 40){
 			badInput = true;
 		}
-		if (newDescription.length > 500) {
+		if (newDescription.length > 500){
 			badInput = true;
 		}
-		if (newTitle.length <= 40 && newDescription.length <= 500) {
+		if (newTitle.length <= 40 && newDescription.length <= 500){
 			badInput = false;
 		}
-		if (newTitle.length === 0 || newDescription.length === 0) {
+		if (newTitle.length === 0 || newDescription.length === 0){
 			badInput = true;
 		}
 	};
@@ -69,13 +65,14 @@
 </script>
 
 <div class="task">
+	<!-- Editable title and description -->
 	<div class="task-content">
 		{#key editable}
 			<h3
 				contenteditable={editable}
 				id={`editable-title-${taskID}`}
 				class={editable ? 'task-title-edit' : 'task-title'}
-				oninput={(e) => (newTitle = e.currentTarget.textContent ?? taskTitle)}
+				oninput={(e) => (newTitle = e.currentTarget.textContent ?? taskTitle)} 
 			>
 				{taskTitle}
 			</h3>
@@ -90,38 +87,42 @@
 			</p>
 		{/key}
 	</div>
+
+     <!-- Togglers for editing and completing tasks -->
 	<div class="togglers">
-		<!-- Update Completed Form -->
+		<!-- Locked checkbox state-->
 		{#if editon}
-			<div class="checkbox-locked">
+		    <div class="checkbox-locked">
 				<img src={lock} alt="Locked" class="Locked" />
 			</div>
 		{:else}
-			<form
-				id="complete-form-{taskID}"
-				method="POST"
-				action="?/updateCompleted"
-				use:enhance={() => {
-					return async ({ result }) => {
-						await invalidateAll(); // fix for ensuring that the form consistently updates the DB after the action without needing a page refresh
-						await applyAction(result);
-					};
-				}}
-			>
-				<!-- Custom Checkbox for completing tasks -->
 
-				<label for="checkbox-{taskID}" class="checkbox-container">
-					<input
-						id="checkbox-{taskID}"
-						type="checkbox"
-						name="completed"
-						bind:checked={taskCompleted}
-						onchange={() => toggleComplete(taskID)}
-					/>
-					<span class="checkmark"></span>
-				</label>
-				<input type="text" name="_id" value={taskID} hidden />
-			</form>
+		<!-- Form for updating completion status via checkbox-->
+		<form
+			id="complete-form-{taskID}"
+			method="POST"
+			action="?/updateCompleted"
+			use:enhance={() => {
+				return async ({ result }) => {
+					await invalidateAll(); // fix for ensuring that the form consistently updates the DB after the action without needing a page refresh
+					await applyAction(result);
+				};
+			}}
+		>
+			<!-- Custom Checkbox for completing tasks -->
+			 
+			<label for="checkbox-{taskID}" class="checkbox-container">
+				<input
+					id="checkbox-{taskID}"
+					type="checkbox"
+					name="completed"
+					bind:checked={taskCompleted}
+					onchange={() => toggleComplete(taskID)}
+				/>
+				<span class="checkmark"></span>
+			</label>
+			<input type="text" name="_id" value={taskID} hidden />
+		</form>
 		{/if}
 
 		<!-- Edit Button -->
@@ -134,25 +135,20 @@
 					return async ({ result }) => {
 						await invalidateAll(); // fix for ensuring that the form consistently updates the DB after the action without needing a page refresh
 						await applyAction(result);
-						toggleEdit(); // exit edit mode after submitting changes
+						toggleEdit() // exit edit mode after submitting changes
 					};
 				}}
 			>
 				<input type="text" name="_id" value={taskID} hidden />
-				<input type="text" name="title" value={newTitle} required maxlength="40" hidden />
-				<input
-					type="text"
-					name="description"
-					value={newDescription}
-					required
-					maxlength="500"
-					hidden
-				/>
-				<!-- Submit Button -->
+				<input type="text" name="title" value={newTitle} required maxlength=40 hidden />
+				<input type="text" name="description" value={newDescription} required maxlength=500 hidden />
+
 				<div class="edit-controls">
+					<!-- Submit Button -->
 					<button class="submit-button" onclick={checkInputs} type="submit" disabled={badInput}>
 						<img src={submit} alt="submit-icon" class="submit-icon" />
 					</button>
+
 					<!-- Cancel Button -->
 					<button class="cancel-button" onclick={cancelEdit} type="button">
 						<img src={cancel} alt="cancel-icon" class="cancel-icon" />
@@ -160,15 +156,17 @@
 				</div>
 			</form>
 		{:else}
-			<!-- Edit Button -->
+		<!-- Open Edit Mode Button -->
 			<button class="toggle-button" onclick={toggleEdit} disabled={editon}>
 				{#if editon}
 					<img src={lock} alt="Locked" class="Locked" />
 				{:else}
 					<img src={edit} alt="edit-icon" class="edit-icon" />
 				{/if}
+				
 			</button>
 		{/if}
+
 		<!-- Delete Button -->
 		<form method="POST" action="?/deleteTask" use:enhance>
 			<input type="hidden" name="_id" value={taskID} />
@@ -184,6 +182,7 @@
 </div>
 
 <style>
+	/* Task Styling */
 	.task {
 		padding-left: 1rem;
 		background-color: var(--contrast);
@@ -213,13 +212,15 @@
 		font-size: 1rem;
 		font-weight: bolder;
 		padding: 0.5rem;
-		white-space: pre-wrap;
+		white-space: pre-wrap; 
 		word-wrap: break-word;
 		word-break: break-word;
 		max-width: 100%;
 		box-sizing: border-box;
 	}
 
+	
+     /* Task Buttons Styling */
 	.togglers {
 		display: flex;
 		flex-direction: column;
@@ -247,7 +248,7 @@
 	.toggle-button:active {
 		box-shadow: var(--foreground) 0px 0px;
 		transform: translate(2px, 2px);
-	}
+	}	
 
 	.toggle-button:disabled {
 		opacity: 0.5;
@@ -321,7 +322,7 @@
 		box-sizing: border-box;
 	}
 
-	/* Edit mode styling*/
+    /* Edit mode styling*/
 
 	.task-title:focus {
 		outline: none;
@@ -338,7 +339,7 @@
 		box-shadow: var(--foreground) 3px 3px;
 		cursor: pointer;
 	}
-
+	
 	.submit-button {
 		background-color: #019b3d;
 		width: 2.2rem;
@@ -367,6 +368,8 @@
 		height: 2rem;
 		cursor: pointer;
 	}
+
+	/* Edit Mode Styling */
 
 	.task-title-edit {
 		font-family: '8bit';
@@ -420,4 +423,5 @@
 		justify-content: center;
 		align-items: center;
 	}
+	
 </style>
