@@ -10,15 +10,21 @@
 	//===============================================================
 
 	// ========================Declarations==========================
-	
 	let {
 		taskID,
 		taskTitle,
 		taskDescription,
 		taskCompleted,
-		editon = $bindable<boolean>(false)
-	}: { taskID: string; taskTitle: string; taskDescription: string; taskCompleted: boolean; editon?: boolean } =
-		$props();
+		editon = $bindable<boolean>(false),
+		badInput = $bindable<boolean>(false)
+	}: {
+		taskID: string;
+		taskTitle: string;
+		taskDescription: string;
+		taskCompleted: boolean;
+		editon?: boolean;
+		badInput?: boolean;
+	} = $props();
 	let editable = $state(false);
 	let newTitle = $state(taskTitle);
 	let newDescription = $state(taskDescription);
@@ -26,7 +32,6 @@
 
 	//========================FUNCTIONS===============================
 	const toggleEdit = () => {
-		console.log('bang')
 		editable = !editable;
 		editon = editable;
 	};
@@ -43,6 +48,22 @@
 		taskDescription = taskDescription; // revert description to original
 		newDescription = taskDescription;
 		newTitle = taskTitle;
+		badInput = false;
+	};
+
+	const checkInputs = () => {
+		if (newTitle.length > 40) {
+			badInput = true;
+		}
+		if (newDescription.length > 500) {
+			badInput = true;
+		}
+		if (newTitle.length <= 40 && newDescription.length <= 500) {
+			badInput = false;
+		}
+		if (newTitle.length === 0 || newDescription.length === 0) {
+			badInput = true;
+		}
 	};
 	//================================================================
 </script>
@@ -72,36 +93,35 @@
 	<div class="togglers">
 		<!-- Update Completed Form -->
 		{#if editon}
-		    <div class="checkbox-locked">
+			<div class="checkbox-locked">
 				<img src={lock} alt="Locked" class="Locked" />
 			</div>
 		{:else}
-				
-		<form
-			id="complete-form-{taskID}"
-			method="POST"
-			action="?/updateCompleted"
-			use:enhance={() => {
-				return async ({ result }) => {
-					await invalidateAll(); // fix for ensuring that the form consistently updates the DB after the action without needing a page refresh
-					await applyAction(result);
-				};
-			}}
-		>
-			<!-- Custom Checkbox for completing tasks -->
-			 
-			<label for="checkbox-{taskID}" class="checkbox-container">
-				<input
-					id="checkbox-{taskID}"
-					type="checkbox"
-					name="completed"
-					bind:checked={taskCompleted}
-					onchange={() => toggleComplete(taskID)}
-				/>
-				<span class="checkmark"></span>
-			</label>
-			<input type="text" name="_id" value={taskID} hidden />
-		</form>
+			<form
+				id="complete-form-{taskID}"
+				method="POST"
+				action="?/updateCompleted"
+				use:enhance={() => {
+					return async ({ result }) => {
+						await invalidateAll(); // fix for ensuring that the form consistently updates the DB after the action without needing a page refresh
+						await applyAction(result);
+					};
+				}}
+			>
+				<!-- Custom Checkbox for completing tasks -->
+
+				<label for="checkbox-{taskID}" class="checkbox-container">
+					<input
+						id="checkbox-{taskID}"
+						type="checkbox"
+						name="completed"
+						bind:checked={taskCompleted}
+						onchange={() => toggleComplete(taskID)}
+					/>
+					<span class="checkmark"></span>
+				</label>
+				<input type="text" name="_id" value={taskID} hidden />
+			</form>
 		{/if}
 
 		<!-- Edit Button -->
@@ -114,16 +134,23 @@
 					return async ({ result }) => {
 						await invalidateAll(); // fix for ensuring that the form consistently updates the DB after the action without needing a page refresh
 						await applyAction(result);
-						toggleEdit() // exit edit mode after submitting changes
+						toggleEdit(); // exit edit mode after submitting changes
 					};
 				}}
 			>
 				<input type="text" name="_id" value={taskID} hidden />
-				<input type="text" name="title" value={newTitle} maxlength="40" hidden />
-				<input type="text" name="description" value={newDescription} maxlength="500" hidden />
+				<input type="text" name="title" value={newTitle} required maxlength="40" hidden />
+				<input
+					type="text"
+					name="description"
+					value={newDescription}
+					required
+					maxlength="500"
+					hidden
+				/>
 				<!-- Submit Button -->
-				<div class="edit-buttons">
-					<button class="submit-button" type="submit">
+				<div class="edit-controls">
+					<button class="submit-button" onclick={checkInputs} type="submit" disabled={badInput}>
 						<img src={submit} alt="submit-icon" class="submit-icon" />
 					</button>
 					<!-- Cancel Button -->
@@ -133,24 +160,23 @@
 				</div>
 			</form>
 		{:else}
-		<!-- Edit Button -->
-			<button class="edit-initialiser" onclick={toggleEdit} disabled={editon}>
+			<!-- Edit Button -->
+			<button class="toggle-button" onclick={toggleEdit} disabled={editon}>
 				{#if editon}
 					<img src={lock} alt="Locked" class="Locked" />
 				{:else}
 					<img src={edit} alt="edit-icon" class="edit-icon" />
 				{/if}
-				
 			</button>
 		{/if}
 		<!-- Delete Button -->
 		<form method="POST" action="?/deleteTask" use:enhance>
 			<input type="hidden" name="_id" value={taskID} />
-			<button class="delete-button" disabled={editon}>
+			<button class="toggle-button" disabled={editon}>
 				{#if editon}
 					<img src={lock} alt="Locked" class="Locked" />
 				{:else}
-					<img src={bin} alt="Delete" class="Bin" />
+					<img src={bin} alt="Delete" class="delete-icon" />
 				{/if}
 			</button>
 		</form>
@@ -187,7 +213,7 @@
 		font-size: 1rem;
 		font-weight: bolder;
 		padding: 0.5rem;
-		white-space: pre-wrap; /* preserve newlines from textarea */
+		white-space: pre-wrap;
 		word-wrap: break-word;
 		word-break: break-word;
 		max-width: 100%;
@@ -202,7 +228,7 @@
 		padding: 1rem;
 	}
 
-	.delete-button {
+	.toggle-button {
 		background-color: var(--yellow);
 		color: var(--foreground);
 		border: none;
@@ -212,22 +238,36 @@
 		width: 2.2rem;
 		height: 2.2rem;
 	}
-	.Bin {
-		width: 2rem;
-		height: 2rem;
-	}
 
-	.delete-button:hover {
+	.toggle-button:hover {
 		background-color: var(--accent);
 		color: var(--yellow);
 	}
 
-	.delete-button:active {
+	.toggle-button:active {
 		box-shadow: var(--foreground) 0px 0px;
 		transform: translate(2px, 2px);
 	}
 
-	/* Custom Checkbox */
+	.toggle-button:disabled {
+		opacity: 0.5;
+		cursor: not-allowed;
+		background-color: #c3850b;
+	}
+
+	.delete-icon {
+		width: 1.5rem;
+		height: 2rem;
+		cursor: pointer;
+	}
+
+	.edit-icon {
+		width: 1.5rem;
+		height: 2rem;
+		cursor: pointer;
+	}
+
+	/* Custom Checkbox and checkmark styling*/
 	.checkbox-container {
 		display: block;
 		position: relative;
@@ -281,32 +321,7 @@
 		box-sizing: border-box;
 	}
 
-	.edit-icon {
-		width: 1.7rem;
-		height: 2rem;
-		cursor: pointer;
-	}
-
-	.edit-initialiser {
-		background-color: var(--yellow);
-		color: var(--foreground);
-		border: none;
-		box-shadow: 3px 3px var(--foreground);
-		cursor: pointer;
-		padding: 0;
-		width: 2.2rem;
-		height: 2.2rem;
-	}
-
-	.edit-initialiser:hover {
-		background-color: var(--accent);
-		color: var(--yellow);
-	}
-
-	.edit-initialiser:active {
-		box-shadow: var(--foreground) 1px 1px;
-		transform: translate(2px, 2px);
-	}
+	/* Edit mode styling*/
 
 	.task-title:focus {
 		outline: none;
@@ -323,6 +338,7 @@
 		box-shadow: var(--foreground) 3px 3px;
 		cursor: pointer;
 	}
+
 	.submit-button {
 		background-color: #019b3d;
 		width: 2.2rem;
@@ -338,7 +354,7 @@
 		transform: translate(2px, 2px);
 	}
 
-	.edit-buttons {
+	.edit-controls {
 		display: flex;
 		flex-direction: column;
 		gap: 1rem;
@@ -388,14 +404,18 @@
 	}
 	.Locked {
 		width: 2rem;
-		height: 2rem;
+		height: 1.5rem;
 	}
 	.checkbox-locked {
-		height: 2.2rem;
-		width: 2.2rem;
-		background-color: var(--cream);
+		opacity: 0.5;
+		cursor: not-allowed;
+		background-color: #c3850b;
+		background-color: #c3850b;
+		color: var(--foreground);
+		border: none;
 		box-shadow: 3px 3px var(--foreground);
-		box-sizing: border-box;
+		width: 2.2rem;
+		height: 2.2rem;
 		display: flex;
 		justify-content: center;
 		align-items: center;

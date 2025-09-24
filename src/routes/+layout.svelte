@@ -12,7 +12,6 @@
 	<div>
 		<img src={logo} class="logo" alt="to-do Logo" />
 	</div>
-
 	<h1 class="page-title">My Tasks</h1>
 </header>
 
@@ -25,8 +24,12 @@
 	header {
 		display: grid;
 		grid-template-columns: 1fr 1fr 1fr;
-		border-bottom: 2px solid var(--foreground);
 		width: 100%;
+		position: fixed;
+		top: 0;
+		left: 0;
+		background-color: var(--cream);
+		z-index: 10;
 	}
 
 	header div {
@@ -61,7 +64,12 @@
 		text-align: center;
 		-webkit-text-stroke: 2px var(--foreground);
 		text-shadow: 5px 4px var(--foreground);
-		text-decoration: underline 10px var(--accent);
+		text-decoration: underline 5px var(--accent);
+		text-underline-offset: 0.5rem;
 		padding: 1rem;
+	}
+
+	main {
+		margin-top: 12rem;
 	}
 </style>

@@ -5,7 +5,7 @@
 	import TaskCard from '$lib/components/TaskCard.svelte';
 	import type { PageProps } from './$types';
 	import { enhance } from '$app/forms';
-	import lock from '$lib/assets/lock.svg';
+	import alert from '$lib/assets/alert.svg';
 	//==========================================================
 
 	// ================Variable Declarations====================
@@ -15,6 +15,8 @@
 	let showcompleted = $state(false);
 	let showincomplete = $state(false);
 	let editon = $state(false);
+	let badInput = $state(false);
+	let errorVisible = $state('display: none;');
 	//==========================================================
 
 	// ======================FUNCTIONS==========================
@@ -35,7 +37,11 @@
 	const filtered = $derived.by(() => {
 		let tasks = data.todos;
 		let filteredTasks = term.trim()
-			? tasks.filter((task) => task.title.toLowerCase().includes(term.toLowerCase()) || task.description.toLowerCase().includes(term.toLowerCase()))
+			? tasks.filter(
+					(task) =>
+						task.title.toLowerCase().includes(term.toLowerCase()) ||
+						task.description.toLowerCase().includes(term.toLowerCase())
+				)
 			: tasks;
 		if (showcompleted) {
 			filteredTasks = filteredTasks.filter((task) => task.completed);
@@ -49,37 +55,59 @@
 </script>
 
 <main>
-	<div class="bg"></div>
-	<section class="navbar">
-		<div class="navbar-buttons">
-				<!-- Search Bar -->
-			{#if editon}
-				<div class="lock-container">
-					<img src={lock} alt="Locked" class="lock" />
-				</div>
-			{:else}
-				<SidebarButton text="Completed" pressed={toggleCompleted} isActive={showcompleted} />
-				<SidebarButton text="Incomplete" pressed={toggleIncomplete} isActive={showincomplete} />
-				<div>
-					<input
-						class="searchbar"
-						type="text"
-						name="searchterm"	
-						placeholder="Search tasks..."
-						bind:value={term}
-						disabled={editon}
-					/>
-				</div>
-				<SidebarButton text="Create" pressed={toggleModal} />
-				<form method="POST" action="?/delete" use:enhance>
-					<SidebarButton text="Clear All" />
-				</form>
-			{/if}
+	<nav class="navbar">
+		<!-- Search Bar -->
+		<div>
+			<input
+				class="searchbar"
+				type="text"
+				name="searchterm"
+				placeholder="Search tasks..."
+				bind:value={term}
+				disabled={editon}
+			/>
 		</div>
-	</section>
+		<!-- Completed Filter Button -->
+		<SidebarButton
+			text="Completed"
+			pressed={toggleCompleted}
+			isActive={showcompleted}
+			disabled={editon}
+		/>
+		<!-- Incomplete Filter Button -->
+		<SidebarButton
+			text="Incomplete"
+			pressed={toggleIncomplete}
+			isActive={showincomplete}
+			disabled={editon}
+		/>
+		<!-- Create Button -->
+		<SidebarButton text="Create" pressed={toggleModal} disabled={editon} />
 
-	<section class="content">
-		<div class="card-grid-wrapper">
+		<!-- Clear All Form & Button -->
+		<form method="POST" action="?/delete" use:enhance>
+			<SidebarButton text="Clear All" disabled={editon} />
+		</form>
+	</nav>
+
+	<!-- Content Area -->
+	<div class="content">
+		{#if badInput}
+			<!-- Error Popup -->
+			<label for="error-popup" class="error-backdrop"></label>
+			<div class="error-popup" transition:fade={{ duration: 200 }}>
+				<header class="error-header">
+					<img src={alert} alt="Alert" class="alert" />
+					<h1 class="error-title">ERROR <br /></h1>
+					<button class="close-error" onclick={() => (badInput = false)}>X</button>
+				</header>
+				<p class="error-message">
+					Title can't be more than 40 characters or empty! <br /> <br />
+					Description can't be more than 500 characters or empty!
+				</p>
+			</div>
+		{/if}
+		<div class="card-grid-wrapper" transition:fade={{ duration: 200 }}>
 			<!-- Populates the page with task elements and also will determin which cards are to be shown based on the state of filters -->
 			{#each filtered as task}
 				{#if task._id}
@@ -88,27 +116,31 @@
 						taskDescription={task.description}
 						taskCompleted={task.completed}
 						taskID={task._id}
-						bind:editon={editon}
+						bind:editon
+						bind:badInput
 					/>
 				{/if}
 			{:else}
-				<p class="no-todos">No Tasks Found! </p>
+				<p class="no-todos">No Tasks Found!</p>
 			{/each}
 		</div>
-	</section>
+	</div>
 
 	{#if showModal}
 		<!-- Modal (shown only when checkbox is checked) -->
 		<div transition:fade={{ duration: 100 }} class="modal-backdrop">
 			<!-- Backdrop to create contrast between modal and content -->
-			<label for="addTaskModal" class="backdrop"></label>
+			<label for="addTaskModal" class="create-form-backdrop"></label>
+
 			<!-- Modal Content -->
 			<div class="modal" role="dialog" aria-modal="true" aria-labelledby="addTaskTitle">
 				<header class="modal-header">
 					<h2 class="addTaskTitle">Add Task</h2>
+
 					<!-- Close button -->
 					<button onclick={toggleModal} class="close-button" aria-label="Close">X</button>
 				</header>
+
 				<!-- The form inside the modal to create a new task -->
 				<form method="POST" action="?/create" onsubmit={toggleModal} use:enhance>
 					{#if form?.missing}
@@ -125,6 +157,7 @@
 							></textarea>
 						</label>
 					</div>
+
 					<div class="modal-actions">
 						<button class="save-button" type="submit">Save</button>
 					</div>
@@ -135,31 +168,50 @@
 </main>
 
 <style>
+	/* Major elements styling */
 	main {
 		display: grid;
-		grid-template-rows: 1fr 5fr;
+		grid-template-rows: auto 1fr;
 		width: 100%;
 	}
 
-	.navbar-buttons {
+	.navbar {
+		position: fixed;
+		top: 10rem;
+		transform: translateY(-50%);
+		width: 100%;
 		display: flex;
 		flex-direction: row;
 		gap: 4rem;
 		padding: 1rem;
 		justify-content: space-evenly;
 		border-bottom: 2px solid var(--foreground);
+		border-top: 2px solid var(--foreground);
+		background-color: var(--cream);
+		z-index: 10;
 	}
 
 	.card-grid-wrapper {
 		display: grid;
 		grid-template-columns: 1fr 1fr 1fr;
 		grid-template-rows: auto;
-		gap: 2vw;
-	}
-	.content {
-		padding: 2vw;
+		gap: 2rem;
 	}
 
+	.content {
+		padding: 2rem;
+	}
+
+	.no-todos {
+		font-family: '8bit';
+		font-size: 1.5rem;
+		color: var(--foreground);
+		text-align: center;
+		grid-column: 2;
+		grid-row: 6;
+	}
+
+	/* Create Modal styling */
 	.save-button {
 		background-color: var(--yellow);
 		border: 1px solid var(--foreground);
@@ -196,7 +248,7 @@
 		z-index: 1000;
 	}
 
-	.backdrop {
+	.create-form-backdrop {
 		position: absolute;
 		inset: 0;
 		background: rgba(0, 0, 0, 0.5);
@@ -243,7 +295,11 @@
 		justify-content: flex-end;
 		gap: 0.75rem;
 	}
-	input {
+
+	.title-input {
+		height: 2rem;
+		border: 2px solid var(--foreground);
+		padding-left: 1rem;
 		background-color: var(--cream);
 		width: 100%;
 		outline-color: var(--accent);
@@ -251,20 +307,6 @@
 		font-size: large;
 		font-weight: bold;
 		color: var(--foreground);
-	}
-	.no-todos {
-		font-family: '8bit';
-		font-size: 1.5rem;
-		color: var(--foreground);
-		text-align: center;
-		grid-column: 2;
-		grid-row: 6;
-	}
-
-	.title-input {
-		height: 2rem;
-		border: 2px solid var(--foreground);
-		padding-left: 1rem;
 	}
 
 	textarea {
@@ -293,6 +335,8 @@
 		display: flex;
 		flex-direction: column;
 	}
+
+	/* Search Bar styling */
 	.searchbar {
 		font-family: '8bit';
 		background: transparent;
@@ -301,10 +345,14 @@
 		padding: 1rem;
 		border: 2px solid var(--foreground);
 		color: var(--foreground);
-		width: 100%;
-		height: 20%;
-		/* box-shadow: var(--foreground) 4px 4px; */
+		height: 1rem;
 		outline-color: var(--accent);
+	}
+
+	.searchbar:disabled {
+		opacity: 0.5;
+		pointer-events: none;
+		cursor: not-allowed;
 	}
 
 	.searchbar:focus {
@@ -328,11 +376,81 @@
 	input::placeholder {
 		color: var(--foreground);
 	}
-	.lock{
-		width: 2rem;
-		height: 3rem;
-		padding-bottom: 1rem;
+
+	.error-message {
+		font-family: 'title';
+		color: var(--foreground);
+		font-size: 1rem;
+		text-align: left;
 	}
-	
-	
+	.error-popup {
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		justify-content: center;
+		gap: 1rem;
+		border: 2px solid var(--foreground);
+		padding: 0.5rem;
+		background-color: var(--contrast);
+		box-shadow: var(--foreground) 4px 4px;
+		height: 3rem;
+		width: auto;
+		z-index: 1000;
+		position: fixed;
+		left: 50%;
+		top: 50%;
+		transform: translate(-50%, -50%);
+		height: fit-content;
+	}
+
+	.alert {
+		width: 3rem;
+		height: 3rem;
+	}
+
+	.error-backdrop {
+		position: fixed;
+		inset: 0;
+		background: rgba(0, 0, 0, 0.5);
+		z-index: 999;
+		height: 100%;
+		width: 100%;
+		display: flex;
+		justify-content: center;
+		align-items: center;
+	}
+	.error-header {
+		display: flex;
+		flex-direction: row;
+		align-items: center;
+		justify-content: space-between;
+		width: 100%;
+		margin-bottom: -1rem;
+		font-family: '8bit';
+		border-bottom: 2px dashed var(--foreground);
+		line-height: 1.5;
+		gap: 4rem;
+		padding: 0.5rem;
+	}
+	.error-title {
+		font-family: '8bit';
+		color: var(--foreground);
+		font-size: 2.5rem;
+		margin: 0;
+	}
+	.close-error {
+		cursor: pointer;
+		font-family: '8bit';
+		font-weight: bold;
+		font-size: 2rem;
+		background-color: transparent;
+		border: none;
+		color: var(--accent);
+	}
+	.error-message {
+		font-family: body;
+		padding: 0.5rem;
+		font-weight: 700;
+		font-size: 1.2rem;
+	}
 </style>
