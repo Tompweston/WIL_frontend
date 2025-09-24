@@ -17,8 +17,14 @@
 		taskCompleted,
 		editon = $bindable<boolean>(false),
 		badInput = $bindable<boolean>(false)
-	}: { taskID: string; taskTitle: string; taskDescription: string; taskCompleted: boolean; editon?: boolean; badInput?: boolean; } =
-		$props();
+	}: {
+		taskID: string;
+		taskTitle: string;
+		taskDescription: string;
+		taskCompleted: boolean;
+		editon?: boolean;
+		badInput?: boolean;
+	} = $props();
 	let editable = $state(false);
 	let newTitle = $state(taskTitle);
 	let newDescription = $state(taskDescription);
@@ -48,16 +54,16 @@
 
 	// Check inputs for validity before enabling submit button
 	const checkInputs = () => {
-		if (newTitle.length > 40){
+		if (newTitle.length > 40) {
 			badInput = true;
 		}
-		if (newDescription.length > 500){
+		if (newDescription.length > 500) {
 			badInput = true;
 		}
-		if (newTitle.length <= 40 && newDescription.length <= 500){
+		if (newTitle.length <= 40 && newDescription.length <= 500) {
 			badInput = false;
 		}
-		if (newTitle.length === 0 || newDescription.length === 0){
+		if (newTitle.length === 0 || newDescription.length === 0) {
 			badInput = true;
 		}
 	};
@@ -72,7 +78,7 @@
 				contenteditable={editable}
 				id={`editable-title-${taskID}`}
 				class={editable ? 'task-title-edit' : 'task-title'}
-				oninput={(e) => (newTitle = e.currentTarget.textContent ?? taskTitle)} 
+				oninput={(e) => (newTitle = e.currentTarget.textContent ?? taskTitle)}
 			>
 				{taskTitle}
 			</h3>
@@ -88,41 +94,40 @@
 		{/key}
 	</div>
 
-     <!-- Togglers for editing and completing tasks -->
+	<!-- Togglers for editing and completing tasks -->
 	<div class="togglers">
 		<!-- Locked checkbox state-->
 		{#if editon}
-		    <div class="checkbox-locked">
+			<div class="checkbox-locked">
 				<img src={lock} alt="Locked" class="Locked" />
 			</div>
 		{:else}
+			<!-- Form for updating completion status via checkbox-->
+			<form
+				id="complete-form-{taskID}"
+				method="POST"
+				action="?/updateCompleted"
+				use:enhance={() => {
+					return async ({ result }) => {
+						await invalidateAll(); // fix for ensuring that the form consistently updates the DB after the action without needing a page refresh
+						await applyAction(result);
+					};
+				}}
+			>
+				<!-- Custom Checkbox for completing tasks -->
 
-		<!-- Form for updating completion status via checkbox-->
-		<form
-			id="complete-form-{taskID}"
-			method="POST"
-			action="?/updateCompleted"
-			use:enhance={() => {
-				return async ({ result }) => {
-					await invalidateAll(); // fix for ensuring that the form consistently updates the DB after the action without needing a page refresh
-					await applyAction(result);
-				};
-			}}
-		>
-			<!-- Custom Checkbox for completing tasks -->
-			 
-			<label for="checkbox-{taskID}" class="checkbox-container">
-				<input
-					id="checkbox-{taskID}"
-					type="checkbox"
-					name="completed"
-					bind:checked={taskCompleted}
-					onchange={() => toggleComplete(taskID)}
-				/>
-				<span class="checkmark"></span>
-			</label>
-			<input type="text" name="_id" value={taskID} hidden />
-		</form>
+				<label for="checkbox-{taskID}" class="checkbox-container">
+					<input
+						id="checkbox-{taskID}"
+						type="checkbox"
+						name="completed"
+						bind:checked={taskCompleted}
+						onchange={() => toggleComplete(taskID)}
+					/>
+					<span class="checkmark"></span>
+				</label>
+				<input type="text" name="_id" value={taskID} hidden />
+			</form>
 		{/if}
 
 		<!-- Edit Button -->
@@ -135,13 +140,20 @@
 					return async ({ result }) => {
 						await invalidateAll(); // fix for ensuring that the form consistently updates the DB after the action without needing a page refresh
 						await applyAction(result);
-						toggleEdit() // exit edit mode after submitting changes
+						toggleEdit(); // exit edit mode after submitting changes
 					};
 				}}
 			>
 				<input type="text" name="_id" value={taskID} hidden />
-				<input type="text" name="title" value={newTitle} required maxlength=40 hidden />
-				<input type="text" name="description" value={newDescription} required maxlength=500 hidden />
+				<input type="text" name="title" value={newTitle} required maxlength="40" hidden />
+				<input
+					type="text"
+					name="description"
+					value={newDescription}
+					required
+					maxlength="500"
+					hidden
+				/>
 
 				<div class="edit-controls">
 					<!-- Submit Button -->
@@ -156,14 +168,13 @@
 				</div>
 			</form>
 		{:else}
-		<!-- Open Edit Mode Button -->
+			<!-- Open Edit Mode Button -->
 			<button class="toggle-button" onclick={toggleEdit} disabled={editon}>
 				{#if editon}
 					<img src={lock} alt="Locked" class="Locked" />
 				{:else}
 					<img src={edit} alt="edit-icon" class="edit-icon" />
 				{/if}
-				
 			</button>
 		{/if}
 
@@ -212,15 +223,14 @@
 		font-size: 1rem;
 		font-weight: bolder;
 		padding: 0.5rem;
-		white-space: pre-wrap; 
+		white-space: pre-wrap;
 		word-wrap: break-word;
 		word-break: break-word;
 		max-width: 100%;
 		box-sizing: border-box;
 	}
 
-	
-     /* Task Buttons Styling */
+	/* Task Buttons Styling */
 	.togglers {
 		display: flex;
 		flex-direction: column;
@@ -248,7 +258,7 @@
 	.toggle-button:active {
 		box-shadow: var(--foreground) 0px 0px;
 		transform: translate(2px, 2px);
-	}	
+	}
 
 	.toggle-button:disabled {
 		opacity: 0.5;
@@ -322,7 +332,7 @@
 		box-sizing: border-box;
 	}
 
-    /* Edit mode styling*/
+	/* Edit mode styling*/
 
 	.task-title:focus {
 		outline: none;
@@ -339,7 +349,7 @@
 		box-shadow: var(--foreground) 3px 3px;
 		cursor: pointer;
 	}
-	
+
 	.submit-button {
 		background-color: #019b3d;
 		width: 2.2rem;
@@ -423,5 +433,4 @@
 		justify-content: center;
 		align-items: center;
 	}
-	
 </style>

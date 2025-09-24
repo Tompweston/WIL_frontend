@@ -11,8 +11,8 @@
 		disabled?: boolean;
 		pressed?: VoidFunction;
 	} = $props();
-
 </script>
+
 <!-- Navbar Button Component state control for being locked/unlocked -->
 <button onclick={() => (pressed ? pressed() : null)} class:isActive {disabled} class="navbar-btn">
 	{#if disabled === true}

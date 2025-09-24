@@ -56,7 +56,6 @@
 
 <main>
 	<nav class="navbar">
-		
 		<!-- Completed Filter Button -->
 		<SidebarButton
 			text="Completed"
@@ -236,7 +235,6 @@
 		box-shadow: var(--foreground) 1px 1px;
 		transform: translate(4px, 4px);
 	}
-
 
 	.form-inputs {
 		display: flex;
