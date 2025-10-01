@@ -2,6 +2,7 @@
 	import '../app.css';
 	import logo from '$lib/assets/TOMMY.png';
 	let { children } = $props();
+	import { authClient } from '$lib/auth/auth-client';
 </script>
 
 <head>
