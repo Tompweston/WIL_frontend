@@ -1,8 +1,10 @@
 <script lang="ts">
 	import '../app.css';
 	import logo from '$lib/assets/TOMMY.png';
+	import {signOut} from '$lib/auth/auth-methods';
 	let { children } = $props();
-	import { authClient } from '$lib/auth/auth-client';
+	import { authClient } from "$lib/auth/auth-client";
+ 	const session = authClient.useSession();
 </script>
 
 <head>
@@ -13,7 +15,16 @@
 	<div>
 		<img src={logo} class="logo" alt="to-do Logo" />
 	</div>
-	<h1 class="page-title">My Tasks</h1>
+	{#if $session.data}
+		<h1 class="page-title">My Tasks</h1>
+	{:else}
+		<h1 class="page-title">Tommy's To-Dos</h1>
+	{/if}
+	<div>
+		{#if $session.data}
+			<button onclick={async () => await signOut()}>Log Out</button>
+		{/if}
+	</div>
 </header>
 
 <main>
@@ -24,7 +35,7 @@
 <style>
 	header {
 		display: grid;
-		grid-template-columns: 1fr 1fr 1fr;
+		grid-template-columns: 1fr 3fr 1fr;
 		width: 100%;
 		position: fixed;
 		top: 0;
@@ -59,7 +70,7 @@
 	}
 
 	.page-title {
-		font-size: 4.5rem;
+		font-size: 4rem;
 		color: var(--yellow);
 		font-family: 'title';
 		font-weight: bolder;
@@ -69,9 +80,25 @@
 		text-decoration: underline 5px var(--accent);
 		text-underline-offset: 0.5rem;
 		padding: 1rem;
+		white-space: nowrap;
+		text-overflow: ellipsis;
+		width: 100%;
+		overflow-x: hidden;
 	}
 
 	main {
 		margin-top: 12rem;
+	}
+
+	button {
+		justify-self: end;
+		align-self: center;
+		padding: 0.5rem 1rem;
+		font-size: 1rem;
+		background-color: var(--accent);
+		color: var(--foreground);
+		border: 2px solid var(--foreground);
+		border-radius: 0.5rem;
+		cursor: pointer;
 	}
 </style>

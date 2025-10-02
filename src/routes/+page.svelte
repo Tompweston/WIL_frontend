@@ -16,7 +16,6 @@
 	let showincomplete = $state(false);
 	let editon = $state(false);
 	let badInput = $state(false);
-	let errorVisible = $state('display: none;');
 	//==========================================================
 
 	// ======================FUNCTIONS==========================
@@ -56,6 +55,19 @@
 
 <main>
 	<nav class="navbar">
+
+		<!-- Search Bar -->
+		<div>
+			<input
+				class="searchbar"
+				type="text"
+				name="searchterm"
+				placeholder="Search tasks..."
+				bind:value={term}
+				disabled={editon}
+			/>
+		</div>
+		
 		<!-- Completed Filter Button -->
 		<SidebarButton
 			text="Completed"
@@ -77,19 +89,8 @@
 		<form method="POST" action="?/delete" use:enhance>
 			<SidebarButton text="Clear All" disabled={editon} />
 		</form>
-
-		<!-- Search Bar -->
-		<div>
-			<input
-				class="searchbar"
-				type="text"
-				name="searchterm"
-				placeholder="Search tasks..."
-				bind:value={term}
-				disabled={editon}
-			/>
-		</div>
 	</nav>
+	
 
 	<!-- Content Area -->
 	<div class="content">

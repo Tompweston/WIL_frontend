@@ -3,7 +3,7 @@ import type { PageServerLoad, Actions } from './$types';
 import { fail } from '@sveltejs/kit';
 
 //gets all tasks
-export const load: PageServerLoad = async ({ params }) => {
+export const load: PageServerLoad = async () => {
 	const result = await client.GET('/tasks/');
 	let todos: typeof result.data = [];
 	let success = false;

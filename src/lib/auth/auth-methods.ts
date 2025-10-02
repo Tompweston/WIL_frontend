@@ -14,13 +14,24 @@ export async function signIn(email: string, password: string){
         /**
          * A URL to redirect to after the user verifies their email (optional)
          */
-        callbackURL: "/protected",
+        callbackURL: "/",
         /**
          * remember the user session after the browser is closed. 
          * @default true
          */
         rememberMe: false
-}, {
+}, {onRequest: (ctx) => {
+            //show loading
+            console.log("Loading...");
+        },
+        onSuccess: (ctx) => {
+            //redirect to the dashboard or sign in page
+            goto("/");
+        },
+        onError: (ctx) => {
+            // display the error message
+            alert(ctx.error.message);
+        },
     //callbacks
 })
 
@@ -31,7 +42,7 @@ export async function signUp(email: string, password: string , name: string, ima
         email, // user email address
         password, // user password -> min 8 characters by default
         name, // user display name
-        callbackURL: "/protected" // A URL to redirect to after the user verifies their email (optional)
+        callbackURL: "/" // A URL to redirect to after the user verifies their email (optional)
     }, {
         onRequest: (ctx) => {
             //show loading
@@ -39,7 +50,7 @@ export async function signUp(email: string, password: string , name: string, ima
         },
         onSuccess: (ctx) => {
             //redirect to the dashboard or sign in page
-            alert("Sign up successful! Please check your email to verify your account.");
+            alert("Sign up successful!");
         },
         onError: (ctx) => {
             // display the error message
@@ -53,7 +64,7 @@ export async function signOut(){
     await authClient.signOut({
         fetchOptions: {
             onSuccess: () => {
-                goto("/");   
+                goto("/login");   
             },
             onError: (ctx) => {
             // display the error message
