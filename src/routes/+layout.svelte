@@ -5,6 +5,7 @@
 	let { children } = $props();
 	import { authClient } from "$lib/auth/auth-client";
  	const session = authClient.useSession();
+	$state(username) = $session.data?.user.name;
 </script>
 
 <head>
@@ -15,8 +16,8 @@
 	<div>
 		<img src={logo} class="logo" alt="to-do Logo" />
 	</div>
-	{#if $session.data}
-		<h1 class="page-title">My Tasks</h1>
+	{#if $session.data?.user.name}
+		<h1 class="page-title"> {name}'s Tasks</h1>
 	{:else}
 		<h1 class="page-title">Tommy's To-Dos</h1>
 	{/if}

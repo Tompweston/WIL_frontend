@@ -1,6 +1,8 @@
 import client from '$lib/server';
 import type { PageServerLoad, Actions } from './$types';
 import { fail } from '@sveltejs/kit';
+import { authClient } from "$lib/auth/auth-client";
+const session = authClient.useSession();
 
 //gets all tasks
 export const load: PageServerLoad = async () => {
@@ -47,7 +49,7 @@ export const actions = {
 				description,
 				completed: false,
 				urgent: false,
-				userID: 'Tom'
+				userID: session?.user.id
 			}
 		});
 	},

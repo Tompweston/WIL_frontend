@@ -13,7 +13,7 @@ export async function handle({ event, resolve }) {
   if(!session){
     if(event.url.pathname.endsWith("/")){
       redirect(302, "/login")
-    }
+    } 
   }else{
     event.locals.session = session.session;
     event.locals.user = session.user;
