@@ -2,10 +2,11 @@
 	import '../app.css';
 	import logo from '$lib/assets/TOMMY.png';
 	import {signOut} from '$lib/auth/auth-methods';
-	let { children } = $props();
 	import { authClient } from "$lib/auth/auth-client";
+	import { invalidateAll } from '$app/navigation';
+	let { children } = $props();
  	const session = authClient.useSession();
-	$state(username) = $session.data?.user.name;
+	
 </script>
 
 <head>
@@ -16,13 +17,18 @@
 	<div>
 		<img src={logo} class="logo" alt="to-do Logo" />
 	</div>
-	{#if $session.data?.user.name}
-		<h1 class="page-title"> {name}'s Tasks</h1>
-	{:else}
-		<h1 class="page-title">Tommy's To-Dos</h1>
-	{/if}
 	<div>
-		{#if $session.data}
+		{#if $session.isPending}
+			<h1 class="page-title">Loading...</h1>
+		{:else if $session.data}
+			<h1 class="page-title">{$session.data.user.name}'s Tasks</h1>
+		{:else}
+			<h1 class="page-title">Tommy's To-Dos</h1>
+		{/if}
+	</div>
+	<div>
+
+		{#if $session.data && !$session.isPending}
 			<button onclick={async () => await signOut()}>Log Out</button>
 		{/if}
 	</div>
@@ -43,27 +49,23 @@
 		left: 0;
 		background-color: var(--cream);
 		z-index: 10;
+		align-items: center;
 	}
 
 	header div {
 		display: flex;
 		justify-content: center;
-		align-items: center;
 	}
 
 	header div:nth-child(1) {
 		justify-content: start;
 		padding-left: 1rem;
-		align-items: end;
 	}
 
-	header div:nth-child(2) {
-		align-items: stretch;
-	}
 
 	header div:nth-child(3) {
-		justify-content: center;
-		padding-right: 1rem;
+		justify-content: end;
+		padding-right: 2rem;
 	}
 
 	.logo {
@@ -76,15 +78,16 @@
 		font-family: 'title';
 		font-weight: bolder;
 		text-align: center;
+		align-self: center;
 		-webkit-text-stroke: 2px var(--foreground);
 		text-shadow: 5px 4px var(--foreground);
 		text-decoration: underline 5px var(--accent);
 		text-underline-offset: 0.5rem;
-		padding: 1rem;
-		white-space: nowrap;
+		padding: 1rem; 
+		/* white-space: nowrap; 
 		text-overflow: ellipsis;
 		width: 100%;
-		overflow-x: hidden;
+		overflow-x: hidden; */
 	}
 
 	main {

@@ -1,16 +1,21 @@
 import client from '$lib/server';
 import type { PageServerLoad, Actions } from './$types';
 import { fail } from '@sveltejs/kit';
-import { authClient } from "$lib/auth/auth-client";
-const session = authClient.useSession();
+import { redirect } from '@sveltejs/kit';
+
 
 //gets all tasks
-export const load: PageServerLoad = async () => {
-	const result = await client.GET('/tasks/');
+export const load: PageServerLoad = async ({ locals }) => {
+	if (!locals.user) {
+		redirect(302, '/login');
+	}
+	const result = await client.GET('/{user_id}', {
+		params: { path: { user_id: locals.user.id } }
+	});
 	let todos: typeof result.data = [];
 	let success = false;
 
-	if (result.data) {
+	if (result.data) {	
 		todos = result.data;
 		success = true;
 	}
@@ -23,7 +28,7 @@ export const load: PageServerLoad = async () => {
 export const actions = {
 	//deletes all tasks
 	delete: async () => {
-		const result = await client.DELETE('/tasks/');
+		const result = await client.DELETE('/');
 		let todos: typeof result.data = [];
 		let success = false;
 
@@ -38,18 +43,20 @@ export const actions = {
 		const formData = await event.request.formData();
 		const title = formData.get('title')?.toString();
 		const description = formData.get('description')?.toString();
+		const user_id = formData.get('user_id')?.toString();
+
 
 		if (!title || !description) {
 			return fail(400, { title, description: description, missing: true });
 		}
 
-		const result = await client.POST('/tasks/', {
+		const result = await client.POST('/', {
 			body: {
 				title,
 				description,
 				completed: false,
 				urgent: false,
-				userID: session?.user.id
+				user_id,
 			}
 		});
 	},
@@ -61,7 +68,7 @@ export const actions = {
 		if (!id) {
 			return fail(400, { id, missing: true });
 		}
-		const result = await client.DELETE('/tasks/{id}', {
+		const result = await client.DELETE('/{id}', {
 			params: { path: { id } }
 		});
 	},
@@ -75,7 +82,7 @@ export const actions = {
 		if (completed === null || !id) {
 			return fail(400, { id, completed, missing: true });
 		}
-		const result = await client.PATCH(`/tasks/{id}`, {
+		const result = await client.PATCH(`/{id}`, {
 			body: {
 				completed
 			},
@@ -94,7 +101,7 @@ export const actions = {
 		if (title === null || description === null || !id) {
 			return fail(400, { id, title, description, missing: true });
 		}
-		const result = await client.PATCH(`/tasks/{id}`, {
+		const result = await client.PATCH(`/{id}`, {
 			body: {
 				title,
 				description

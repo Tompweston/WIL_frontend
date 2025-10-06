@@ -11,8 +11,27 @@ export interface paths {
             path?: never;
             cookie?: never;
         };
-        /** Homepage */
-        get: operations["homepage__get"];
+        /** Get All Tasks */
+        get: operations["get_all_tasks__get"];
+        put?: never;
+        /** Create Task */
+        post: operations["create_task__post"];
+        /** Delete All Tasks */
+        delete: operations["delete_all_tasks__delete"];
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/{user_id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Get Tasks By User Id */
+        get: operations["get_tasks_by_user_id__user_id__get"];
         put?: never;
         post?: never;
         delete?: never;
@@ -21,26 +40,7 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/tasks/": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /** Get All Tasks */
-        get: operations["get_all_tasks_tasks__get"];
-        put?: never;
-        /** Create Task */
-        post: operations["create_task_tasks__post"];
-        /** Delete All Tasks */
-        delete: operations["delete_all_tasks_tasks__delete"];
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/tasks/{id}": {
+    "/{id}": {
         parameters: {
             query?: never;
             header?: never;
@@ -48,33 +48,15 @@ export interface paths {
             cookie?: never;
         };
         /** Get Task */
-        get: operations["get_task_tasks__id__get"];
+        get: operations["get_task__id__get"];
         put?: never;
         post?: never;
         /** Delete Task */
-        delete: operations["delete_task_tasks__id__delete"];
+        delete: operations["delete_task__id__delete"];
         options?: never;
         head?: never;
         /** Update Task */
-        patch: operations["update_task_tasks__id__patch"];
-        trace?: never;
-    };
-    "/users/": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /** Get All Users */
-        get: operations["get_all_users_users__get"];
-        put?: never;
-        /** Create User */
-        post: operations["create_user_users__post"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
+        patch: operations["update_task__id__patch"];
         trace?: never;
     };
     "/users/{id}": {
@@ -84,8 +66,7 @@ export interface paths {
             path?: never;
             cookie?: never;
         };
-        /** Get User */
-        get: operations["get_user_users__id__get"];
+        get?: never;
         put?: never;
         post?: never;
         /** Delete User */
@@ -140,15 +121,6 @@ export interface components {
             /** Urgent */
             urgent?: boolean | null;
         };
-        /** User */
-        User: {
-            /** @description MongoDB document ObjectID */
-            _id?: components["schemas"]["PydanticObjectId"] | null;
-            /** Email */
-            email: string;
-            /** Name */
-            name: string;
-        };
         /** ValidationError */
         ValidationError: {
             /** Location */
@@ -167,27 +139,7 @@ export interface components {
 }
 export type $defs = Record<string, never>;
 export interface operations {
-    homepage__get: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description Successful Response */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": unknown;
-                };
-            };
-        };
-    };
-    get_all_tasks_tasks__get: {
+    get_all_tasks__get: {
         parameters: {
             query?: never;
             header?: never;
@@ -207,7 +159,7 @@ export interface operations {
             };
         };
     };
-    create_task_tasks__post: {
+    create_task__post: {
         parameters: {
             query?: never;
             header?: never;
@@ -240,7 +192,7 @@ export interface operations {
             };
         };
     };
-    delete_all_tasks_tasks__delete: {
+    delete_all_tasks__delete: {
         parameters: {
             query?: never;
             header?: never;
@@ -260,7 +212,38 @@ export interface operations {
             };
         };
     };
-    get_task_tasks__id__get: {
+    get_tasks_by_user_id__user_id__get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                user_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Task"][];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    get_task__id__get: {
         parameters: {
             query?: never;
             header?: never;
@@ -291,7 +274,7 @@ export interface operations {
             };
         };
     };
-    delete_task_tasks__id__delete: {
+    delete_task__id__delete: {
         parameters: {
             query?: never;
             header?: never;
@@ -322,7 +305,7 @@ export interface operations {
             };
         };
     };
-    update_task_tasks__id__patch: {
+    update_task__id__patch: {
         parameters: {
             query?: never;
             header?: never;
@@ -344,90 +327,6 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["Task"];
-                };
-            };
-            /** @description Validation Error */
-            422: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["HTTPValidationError"];
-                };
-            };
-        };
-    };
-    get_all_users_users__get: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description Successful Response */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["User"][];
-                };
-            };
-        };
-    };
-    create_user_users__post: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody: {
-            content: {
-                "application/json": components["schemas"]["User"];
-            };
-        };
-        responses: {
-            /** @description Successful Response */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["User"];
-                };
-            };
-            /** @description Validation Error */
-            422: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["HTTPValidationError"];
-                };
-            };
-        };
-    };
-    get_user_users__id__get: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                id: string;
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description Successful Response */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["User"];
                 };
             };
             /** @description Validation Error */

@@ -4,6 +4,7 @@ import { building } from "$app/environment";
 import { redirect } from "@sveltejs/kit";
 
 export async function handle({ event, resolve }) {
+  
   // Fetch current session from Better Auth
   const session = await auth.api.getSession({
     headers: event.request.headers,

@@ -6,6 +6,9 @@
 	import type { PageProps } from './$types';
 	import { enhance } from '$app/forms';
 	import alert from '$lib/assets/alert.svg';
+	import { authClient } from "$lib/auth/auth-client";
+ 	const session = authClient.useSession();
+
 	//==========================================================
 
 	// ================Variable Declarations====================
@@ -159,6 +162,7 @@
 							></textarea>
 						</label>
 					</div>
+					<input type="hidden" name="user_id" value={$session.data?.user.id} />
 
 					<div class="modal-actions">
 						<button class="save-button" type="submit">Save</button>
