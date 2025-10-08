@@ -1,6 +1,6 @@
 <script lang="ts">
-	import "../app.css";
-	import logo from '$lib/assets/browntask.png';
+	import '../app.css';
+	import logo from '$lib/assets/TOMMY.png';
 	let { children } = $props();
 </script>
 
@@ -12,23 +12,24 @@
 	<div>
 		<img src={logo} class="logo" alt="to-do Logo" />
 	</div>
-
 	<h1 class="page-title">My Tasks</h1>
 </header>
 
 <main>
+	<!-- Main content area which is populated in page.svelte -->
 	{@render children?.()}
 </main>
 
-
 <style>
-
 	header {
 		display: grid;
 		grid-template-columns: 1fr 1fr 1fr;
-		border-bottom: 2px solid #614432;
 		width: 100%;
-
+		position: fixed;
+		top: 0;
+		left: 0;
+		background-color: var(--cream);
+		z-index: 10;
 	}
 
 	header div {
@@ -40,6 +41,7 @@
 	header div:nth-child(1) {
 		justify-content: start;
 		padding-left: 1rem;
+		align-items: end;
 	}
 
 	header div:nth-child(2) {
@@ -52,21 +54,23 @@
 	}
 
 	.logo {
-		height: 10vh;
-		will-change: filter;
-		transition: filter 300ms, transform 200ms;
+		height: 8rem;
 	}
 
-	.page-title{
+	.page-title {
 		font-size: 4.5rem;
-		color: var(--accent);
+		color: var(--yellow);
 		font-family: 'title';
 		font-weight: bolder;
 		text-align: center;
-	    -webkit-text-stroke: 2px var(--foreground);
+		-webkit-text-stroke: 2px var(--foreground);
 		text-shadow: 5px 4px var(--foreground);
+		text-decoration: underline 5px var(--accent);
+		text-underline-offset: 0.5rem;
 		padding: 1rem;
-		}
-	
-</style>
+	}
 
+	main {
+		margin-top: 12rem;
+	}
+</style>

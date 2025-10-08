@@ -1,62 +1,60 @@
-
 @font-face {
-  font-family: 'subheading';
-  font-style: normal;
-  font-display: swap;
-  font-weight: 400;
-  src: url(@fontsource/fugaz-one/files/fugaz-one-latin-400-normal.woff2) format('woff2'), url(@fontsource/fugaz-one/files/fugaz-one-latin-400-normal.woff) format('woff');
-  unicode-range: U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD;
+	font-family: 'title';
+	font-style: normal;
+	font-display: swap;
+	font-weight: 400;
+	src:
+		url(@fontsource/lobster/files/lobster-latin-400-normal.woff2) format('woff2'),
+		url(@fontsource/lobster/files/lobster-latin-400-normal.woff) format('woff');
+	unicode-range:
+		U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329,
+		U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
 }
 
 @font-face {
-  font-family: 'title';
-  font-style: normal;
-  font-display: swap;
-  font-weight: 400;
-  src: url(@fontsource/lobster/files/lobster-latin-400-normal.woff2) format('woff2'), url(@fontsource/lobster/files/lobster-latin-400-normal.woff) format('woff');
-  unicode-range: U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD;
-}
-
-
-@font-face {
-  font-family: 'body';
-  font-style: normal;
-  font-display: swap;
-  font-weight: 300 700;
-  src: url(@fontsource-variable/comfortaa/files/comfortaa-latin-wght-normal.woff2) format('woff2-variations');
-  unicode-range: U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD;
+	font-family: 'body';
+	font-style: normal;
+	font-display: swap;
+	font-weight: 300 700;
+	src: url(@fontsource-variable/comfortaa/files/comfortaa-latin-wght-normal.woff2)
+		format('woff2-variations');
+	unicode-range:
+		U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329,
+		U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
 }
 
 @font-face {
-  font-family: '8bit';
-  font-style: normal;
-  font-display: swap;
-  font-weight: 400;
-  src: url(@fontsource/press-start-2p/files/press-start-2p-latin-400-normal.woff2) format('woff2'), url(@fontsource/press-start-2p/files/press-start-2p-latin-400-normal.woff) format('woff');
-  unicode-range: U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD;
+	font-family: '8bit';
+	font-style: normal;
+	font-display: swap;
+	font-weight: 400;
+	src:
+		url(@fontsource/press-start-2p/files/press-start-2p-latin-400-normal.woff2) format('woff2'),
+		url(@fontsource/press-start-2p/files/press-start-2p-latin-400-normal.woff) format('woff');
+	unicode-range:
+		U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329,
+		U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
 }
+
 :root {
-  background-color: var(--cream);;
-  --foreground: #614432;
-  --accent: #DE603B;
-  --contrast: #EDCFAA;
-  --yellow: #FEB914;
-  --darkgrey: #4a4d4f;
-  --peach: rgb(254, 185, 147);
-  --cream: rgb(251, 238, 212);
-  --blue:#95b8b8;
+	background-color: var(--cream);
+	--foreground: #614432;
+	--accent: #de603b;
+	--contrast: #edcfaa;
+	--yellow: #feb914;
+	--darkgrey: #4a4d4f;
+	--peach: rgb(254, 185, 147);
+	--cream: #fbeed4;
+	--blue: #95b8b8;
 }
-
 
 * {
-  padding: 0;
-  margin: 0;
-  box-sizing: border-box;
-  font-family: '8bit';
-  font-synthesis: none;
-  text-rendering: optimizeLegibility;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+	padding: 0;
+	margin: 0;
+	box-sizing: border-box;
+	font-family: '8bit';
+	font-synthesis: none;
+	text-rendering: optimizeLegibility;
+	-webkit-font-smoothing: antialiased;
+	-moz-osx-font-smoothing: grayscale;
 }
-
-
