@@ -1,4 +1,4 @@
-import { goto } from "$app/navigation";
+import { goto, invalidateAll } from "$app/navigation";
 import { Loading } from "carbon-components-svelte";
 import { authClient } from "./auth-client";
 
@@ -65,6 +65,7 @@ export async function signOut(){
     await authClient.signOut({
         fetchOptions: {
             onSuccess: () => {
+                invalidateAll();
                 goto("/login");   
             },
             onError: (ctx) => {

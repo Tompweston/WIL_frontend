@@ -11,23 +11,23 @@
 
 	// ========================Declarations==========================
 	let {
-		taskID,
-		taskTitle,
-		taskDescription,
-		taskCompleted,
+		ID,
+		Title,
+		Description,
+		Completed,
 		editon = $bindable<boolean>(false),
 		badInput = $bindable<boolean>(false)
 	}: {
-		taskID: string;
-		taskTitle: string;
-		taskDescription: string;
-		taskCompleted: boolean;
+		ID: string;
+		Title: string;
+		Description: string;
+		Completed: boolean;
 		editon?: boolean;
 		badInput?: boolean;
 	} = $props();
 	let editable = $state(false);
-	let newTitle = $state(taskTitle);
-	let newDescription = $state(taskDescription);
+	let newTitle = $state(Title);
+	let newDescription = $state(Description);
 	//================================================================
 
 	//========================FUNCTIONS===============================
@@ -45,10 +45,10 @@
 	// Cancel editing and revert to original values
 	const cancelEdit = () => {
 		toggleEdit();
-		taskTitle = taskTitle; // revert title to original
-		taskDescription = taskDescription; // revert description to original
-		newDescription = taskDescription;
-		newTitle = taskTitle;
+		Title = Title; // revert title to original
+		Description = Description; // revert description to original
+		newDescription = Description;
+		newTitle = Title;
 		badInput = false;
 	};
 
@@ -76,20 +76,20 @@
 		{#key editable}
 			<h3
 				contenteditable={editable}
-				id={`editable-title-${taskID}`}
+				id={`editable-title-${ID}`}
 				class={editable ? 'task-title-edit' : 'task-title'}
-				oninput={(e) => (newTitle = e.currentTarget.textContent ?? taskTitle)}
+				oninput={(e) => (newTitle = e.currentTarget.textContent ?? Title)}
 			>
-				{taskTitle}
+				{Title}
 			</h3>
 
 			<p
 				contenteditable={editable}
-				id={`editable-description-${taskID}`}
+				id={`editable-description-${ID}`}
 				class={editable ? 'task-description-edit' : 'task-description'}
-				oninput={(e) => (newDescription = e.currentTarget.textContent ?? taskDescription)}
+				oninput={(e) => (newDescription = e.currentTarget.textContent ?? Description)}
 			>
-				{taskDescription}
+				{Description}
 			</p>
 		{/key}
 	</div>
@@ -104,7 +104,7 @@
 		{:else}
 			<!-- Form for updating completion status via checkbox-->
 			<form
-				id="complete-form-{taskID}"
+				id="complete-form-{ID}"
 				method="POST"
 				action="?/updateCompleted"
 				use:enhance={() => {
@@ -116,24 +116,24 @@
 			>
 				<!-- Custom Checkbox for completing tasks -->
 
-				<label for="checkbox-{taskID}" class="checkbox-container">
+				<label for="checkbox-{ID}" class="checkbox-container">
 					<input
-						id="checkbox-{taskID}"
+						id="checkbox-{ID}"
 						type="checkbox"
 						name="completed"
-						bind:checked={taskCompleted}
-						onchange={() => toggleComplete(taskID)}
+						bind:checked={Completed}
+						onchange={() => toggleComplete(ID)}
 					/>
 					<span class="checkmark"></span>
 				</label>
-				<input type="text" name="_id" value={taskID} hidden />
+				<input type="text" name="_id" value={ID} hidden />
 			</form>
 		{/if}
 
 		<!-- Edit Button -->
 		{#if editable === true}
 			<form
-				id={taskID}
+				id={ID}
 				method="POST"
 				action="?/updateTask"
 				use:enhance={() => {
@@ -144,7 +144,7 @@
 					};
 				}}
 			>
-				<input type="text" name="_id" value={taskID} hidden />
+				<input type="text" name="_id" value={ID} hidden />
 				<input type="text" name="title" value={newTitle} required maxlength="40" hidden />
 				<input
 					type="text"
@@ -180,7 +180,7 @@
 
 		<!-- Delete Button -->
 		<form method="POST" action="?/deleteTask" use:enhance>
-			<input type="hidden" name="_id" value={taskID} />
+			<input type="hidden" name="_id" value={ID} />
 			<button class="toggle-button" disabled={editon}>
 				{#if editon}
 					<img src={lock} alt="Locked" class="Locked" />

@@ -2,7 +2,7 @@ import client from '$lib/server';
 import type { PageServerLoad, Actions } from './$types';
 import { fail } from '@sveltejs/kit';
 import { redirect } from '@sveltejs/kit';
-
+let id: string;
 
 //gets all tasks
 export const load: PageServerLoad = async ({ locals }) => {
@@ -27,8 +27,16 @@ export const load: PageServerLoad = async ({ locals }) => {
 
 export const actions = {
 	//deletes all tasks
-	delete: async () => {
-		const result = await client.DELETE('/');
+	delete: async (event) => {
+		if (!event.locals.user) {
+			redirect(302, '/login');
+		}
+		console.log("Deleting all tasks for user:", event.locals.user.id);
+		const user_id = event.locals.user.id;
+		const result = await client.DELETE('/{user_id}', {
+			params: { path: { user_id } }
+		});
+
 		let todos: typeof result.data = [];
 		let success = false;
 
@@ -61,17 +69,17 @@ export const actions = {
 		});
 	},
 
-	//delete a specific task by its id
-	deleteTask: async (event) => {
-		const formData = await event.request.formData();
-		const id = formData.get('_id')?.toString();
-		if (!id) {
-			return fail(400, { id, missing: true });
-		}
-		const result = await client.DELETE('/{id}', {
-			params: { path: { id } }
-		});
-	},
+	// //delete a specific task by its id
+	// deleteTask: async (event) => {
+	// 	const formData = await event.request.formData();
+	// 	const id = formData.get('_id')?.toString();
+	// 	if (!id) {
+	// 		return fail(400, { id, missing: true });
+	// 	}
+	// 	const result = await client.DELETE('/{id}', {
+	// 		params: { path: { id } }
+	// 	});
+	// },
 
 	//update a specific task by its id
 	updateCompleted: async ({ request }) => {

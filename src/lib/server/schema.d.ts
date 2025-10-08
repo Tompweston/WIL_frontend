@@ -34,7 +34,8 @@ export interface paths {
         get: operations["get_tasks_by_user_id__user_id__get"];
         put?: never;
         post?: never;
-        delete?: never;
+        /** Delete Tasks By User Id */
+        delete: operations["delete_tasks_by_user_id__user_id__delete"];
         options?: never;
         head?: never;
         patch?: never;
@@ -100,8 +101,8 @@ export interface components {
              * @default false
              */
             completed: boolean;
-            /** Userid */
-            userID?: string | null;
+            /** User Id */
+            user_id?: string | null;
             /**
              * Urgent
              * @default false
@@ -116,8 +117,8 @@ export interface components {
             description?: string | null;
             /** Completed */
             completed?: boolean | null;
-            /** Userid */
-            userID?: string | null;
+            /** User Id */
+            user_id?: string | null;
             /** Urgent */
             urgent?: boolean | null;
         };
@@ -230,6 +231,37 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["Task"][];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    delete_tasks_by_user_id__user_id__delete: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                user_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": unknown;
                 };
             };
             /** @description Validation Error */

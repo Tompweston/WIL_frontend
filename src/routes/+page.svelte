@@ -117,10 +117,10 @@
 			{#each filtered as task}
 				{#if task._id}
 					<TaskCard
-						taskTitle={task.title}
-						taskDescription={task.description}
-						taskCompleted={task.completed}
-						taskID={task._id}
+						Title={task.title}
+						Description={task.description}
+						Completed={task.completed}
+						ID={task._id}
 						bind:editon
 						bind:badInput
 					/>

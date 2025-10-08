@@ -1,12 +1,16 @@
 <script lang="ts">
 	import '../app.css';
 	import logo from '$lib/assets/TOMMY.png';
-	import {signOut} from '$lib/auth/auth-methods';
-	import { authClient } from "$lib/auth/auth-client";
-	import { invalidateAll } from '$app/navigation';
-	let { children } = $props();
- 	const session = authClient.useSession();
+	import { signOut } from '$lib/auth/auth-methods';
+	import { onMount } from 'svelte';
+	import { slide, fly, fade } from 'svelte/transition';
+	import { read } from '$app/server';
 	
+	let { data, children } = $props();
+	let ready = $state(false);
+	onMount(() => {
+		ready = true;
+	});
 </script>
 
 <head>
@@ -18,22 +22,19 @@
 		<img src={logo} class="logo" alt="to-do Logo" />
 	</div>
 	<div>
-		{#if $session.isPending}
-			<h1 class="page-title">Loading...</h1>
-		{:else if $session.data}
-			<h1 class="page-title">{$session.data.user.name}'s Tasks</h1>
-		{:else}
-			<h1 class="page-title">Tommy's To-Dos</h1>
+		{#if ready && data.user}
+			<h1 class="page-title" transition:slide={{ duration: 300 }}>{data.user.name}'s Tasks</h1>
+		{:else if ready}
+			<h1 class="page-title" transition:slide={{ duration: 300 }}>Tommy's To-Dos</h1>
 		{/if}
 	</div>
 	<div>
-
-		{#if $session.data && !$session.isPending}
-			<button onclick={async () => await signOut()}>Log Out</button>
+		{#if data.user}
+			<button onclick={async () =>  await signOut()}>Log Out</button>
 		{/if}
 	</div>
 </header>
-
+	
 <main>
 	<!-- Main content area which is populated in page.svelte -->
 	{@render children?.()}
@@ -52,21 +53,27 @@
 		align-items: center;
 	}
 
-	header div {
-		display: flex;
-		justify-content: center;
-	}
+	/* header div {
+		display: grid;
+		place-items: center;
+	} */
 
 	header div:nth-child(1) {
 		justify-content: start;
 		padding-left: 1rem;
 	}
 
+	header div:nth-child(2) {
+		display: grid;
+		place-items: center;
+		background-color: transparent;
+	}
 
 	header div:nth-child(3) {
 		justify-content: end;
 		padding-right: 2rem;
 	}
+
 
 	.logo {
 		height: 8rem;
@@ -77,17 +84,12 @@
 		color: var(--yellow);
 		font-family: 'title';
 		font-weight: bolder;
-		text-align: center;
-		align-self: center;
 		-webkit-text-stroke: 2px var(--foreground);
 		text-shadow: 5px 4px var(--foreground);
 		text-decoration: underline 5px var(--accent);
 		text-underline-offset: 0.5rem;
 		padding: 1rem; 
-		/* white-space: nowrap; 
-		text-overflow: ellipsis;
-		width: 100%;
-		overflow-x: hidden; */
+		
 	}
 
 	main {
