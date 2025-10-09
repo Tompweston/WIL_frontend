@@ -2,20 +2,19 @@ import client from '$lib/server';
 import type { PageServerLoad, Actions } from './$types';
 import { fail } from '@sveltejs/kit';
 import { redirect } from '@sveltejs/kit';
-let id: string;
 
 //gets all tasks
 export const load: PageServerLoad = async ({ locals }) => {
 	if (!locals.user) {
 		redirect(302, '/login');
 	}
-	const result = await client.GET('/{user_id}', {
-		params: { path: { user_id: locals.user.id } }
+	const result = await client.GET('/tasks/', {
+		params: { header: { userID: locals.user.id } }
 	});
 	let todos: typeof result.data = [];
 	let success = false;
 
-	if (result.data) {	
+	if (result.data) {
 		todos = result.data;
 		success = true;
 	}
@@ -26,17 +25,15 @@ export const load: PageServerLoad = async ({ locals }) => {
 };
 
 export const actions = {
-	//deletes all tasks
-	delete: async (event) => {
-		if (!event.locals.user) {
+	//deletes all tasks for the user
+	delete: async ({ locals }) => {
+		if (!locals.user) {
 			redirect(302, '/login');
 		}
-		console.log("Deleting all tasks for user:", event.locals.user.id);
-		const user_id = event.locals.user.id;
-		const result = await client.DELETE('/{user_id}', {
-			params: { path: { user_id } }
+		const user_id = locals.user.id;
+		const result = await client.DELETE('/tasks/', {
+			params: { header: { userID: locals.user.id } }
 		});
-
 		let todos: typeof result.data = [];
 		let success = false;
 
@@ -46,75 +43,75 @@ export const actions = {
 		}
 	},
 
-	// add new task
-	create: async (event) => {
-		const formData = await event.request.formData();
+	// add new task for the user
+	create: async ({ locals, request }) => {
+		const formData = await request.formData();
 		const title = formData.get('title')?.toString();
 		const description = formData.get('description')?.toString();
-		const user_id = formData.get('user_id')?.toString();
-
+		if (!locals.user) {
+			redirect(302, '/login');
+		}
 
 		if (!title || !description) {
 			return fail(400, { title, description: description, missing: true });
 		}
 
-		const result = await client.POST('/', {
+		const result = await client.POST('/tasks/', {
+			params: {
+				header: {
+					userID: locals.user.id
+				}
+			},
 			body: {
 				title,
 				description,
 				completed: false,
-				urgent: false,
-				user_id,
+				urgent: false
 			}
 		});
 	},
 
-	// //delete a specific task by its id
-	// deleteTask: async (event) => {
-	// 	const formData = await event.request.formData();
-	// 	const id = formData.get('_id')?.toString();
-	// 	if (!id) {
-	// 		return fail(400, { id, missing: true });
-	// 	}
-	// 	const result = await client.DELETE('/{id}', {
-	// 		params: { path: { id } }
-	// 	});
-	// },
-
-	//update a specific task by its id
-	updateCompleted: async ({ request }) => {
+	//delete a specific task by its id
+	deleteTask: async ({ locals, request }) => {
 		const formData = await request.formData();
 		const id = formData.get('_id')?.toString();
-		const completed = formData.get('completed') === 'on' ? true : false;
-
-		if (completed === null || !id) {
-			return fail(400, { id, completed, missing: true });
+		if (!locals.user) {
+			redirect(302, '/login');
 		}
-		const result = await client.PATCH(`/{id}`, {
-			body: {
-				completed
-			},
-			params: { path: { id } }
+		if (!id) {
+			return fail(400, { id, missing: true });
+		}
+		const result = await client.DELETE('/tasks/{id}', {
+			params: {
+				path: { id },
+				header: { userID: locals.user.id }
+			}
 		});
-
-		return { success: true };
 	},
 
 	//update a specific task title or description by its id
-	updateTask: async ({ request }) => {
+	updateTask: async ({ request, locals }) => {
 		const formData = await request.formData();
 		const id = formData.get('_id')?.toString();
 		const title = formData.get('title')?.toString();
 		const description = formData.get('description')?.toString();
+		const completed = formData.get('completed') === 'on' ? true : false;
+		if (!locals.user) {
+			redirect(302, '/login');
+		}
 		if (title === null || description === null || !id) {
 			return fail(400, { id, title, description, missing: true });
 		}
-		const result = await client.PATCH(`/{id}`, {
+		const result = await client.PATCH(`/tasks/{id}`, {
 			body: {
 				title,
-				description
+				description,
+				completed
 			},
-			params: { path: { id } }
+			params: {
+				path: { id },
+				header: { userID: locals.user.id }
+			}
 		});
 
 		return { success: true };

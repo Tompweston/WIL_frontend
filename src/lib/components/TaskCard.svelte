@@ -18,7 +18,7 @@
 		editon = $bindable<boolean>(false),
 		badInput = $bindable<boolean>(false)
 	}: {
-		ID: string;
+		ID: string | undefined | null;
 		Title: string;
 		Description: string;
 		Completed: boolean;
@@ -36,6 +36,10 @@
 		editon = editable;
 	};
 
+	if (ID === undefined || ID === null) {
+		throw new Error('Task ID is undefined or null');
+	}
+
 	// Submit the form when the checkbox is toggled
 	const toggleComplete = (taskID: string) => {
 		const form = document.getElementById(`complete-form-${taskID}`) as HTMLFormElement;
@@ -45,8 +49,6 @@
 	// Cancel editing and revert to original values
 	const cancelEdit = () => {
 		toggleEdit();
-		Title = Title; // revert title to original
-		Description = Description; // revert description to original
 		newDescription = Description;
 		newTitle = Title;
 		badInput = false;
@@ -60,9 +62,7 @@
 		if (newDescription.length > 500) {
 			badInput = true;
 		}
-		if (newTitle.length <= 40 && newDescription.length <= 500) {
-			badInput = false;
-		}
+
 		if (newTitle.length === 0 || newDescription.length === 0) {
 			badInput = true;
 		}
@@ -106,7 +106,7 @@
 			<form
 				id="complete-form-{ID}"
 				method="POST"
-				action="?/updateCompleted"
+				action="?/updateTask"
 				use:enhance={() => {
 					return async ({ result }) => {
 						await invalidateAll(); // fix for ensuring that the form consistently updates the DB after the action without needing a page refresh
@@ -422,7 +422,6 @@
 	.checkbox-locked {
 		opacity: 0.5;
 		cursor: not-allowed;
-		background-color: #c3850b;
 		background-color: #c3850b;
 		color: var(--foreground);
 		border: none;

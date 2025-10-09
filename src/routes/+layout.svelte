@@ -3,14 +3,17 @@
 	import logo from '$lib/assets/TOMMY.png';
 	import { signOut } from '$lib/auth/auth-methods';
 	import { onMount } from 'svelte';
-	import { slide, fly, fade } from 'svelte/transition';
-	import { read } from '$app/server';
+	import { slide } from 'svelte/transition';
 	
 	let { data, children } = $props();
+
 	let ready = $state(false);
+
+	// Ensures that the page title only appears after the page has fully loaded to prevent transition issues
 	onMount(() => {
 		ready = true;
 	});
+
 </script>
 
 <head>
@@ -30,14 +33,19 @@
 	</div>
 	<div>
 		{#if data.user}
-			<button onclick={async () =>  await signOut()}>Log Out</button>
+			<button class="logout-button" onclick={async () => await signOut()}>Log Out</button>
 		{/if}
 	</div>
 </header>
-	
+
 <main>
 	<!-- Main content area which is populated in page.svelte -->
-	{@render children?.()}
+	<svelte:boundary>
+		{@render children?.()}
+		{#snippet pending()}
+			<p class="loading">Loading...</p>
+		{/snippet}
+	</svelte:boundary>
 </main>
 
 <style>
@@ -53,10 +61,10 @@
 		align-items: center;
 	}
 
-	/* header div {
-		display: grid;
-		place-items: center;
-	} */
+	header div {
+		display: flex;
+		align-items: center;
+	}
 
 	header div:nth-child(1) {
 		justify-content: start;
@@ -66,14 +74,12 @@
 	header div:nth-child(2) {
 		display: grid;
 		place-items: center;
-		background-color: transparent;
 	}
 
 	header div:nth-child(3) {
 		justify-content: end;
 		padding-right: 2rem;
 	}
-
 
 	.logo {
 		height: 8rem;
@@ -88,15 +94,23 @@
 		text-shadow: 5px 4px var(--foreground);
 		text-decoration: underline 5px var(--accent);
 		text-underline-offset: 0.5rem;
-		padding: 1rem; 
-		
+		padding: 1rem;
 	}
 
 	main {
 		margin-top: 12rem;
 	}
 
-	button {
+	.loading {
+		font-family: '8bit';
+		font-size: 1.5rem;
+		color: var(--foreground);
+		text-align: center;
+		grid-column: 2;
+		grid-row: 6;
+	}
+
+	.logout-button {
 		justify-self: end;
 		align-self: center;
 		padding: 0.5rem 1rem;
@@ -104,7 +118,7 @@
 		background-color: var(--accent);
 		color: var(--foreground);
 		border: 2px solid var(--foreground);
-		border-radius: 0.5rem;
 		cursor: pointer;
+		box-shadow: 3px 3px var(--foreground);
 	}
 </style>
