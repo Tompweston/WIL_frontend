@@ -4,23 +4,6 @@
  */
 
 export interface paths {
-	'/': {
-		parameters: {
-			query?: never;
-			header?: never;
-			path?: never;
-			cookie?: never;
-		};
-		/** Homepage */
-		get: operations['homepage__get'];
-		put?: never;
-		post?: never;
-		delete?: never;
-		options?: never;
-		head?: never;
-		patch?: never;
-		trace?: never;
-	};
 	'/tasks/': {
 		parameters: {
 			query?: never;
@@ -28,13 +11,13 @@ export interface paths {
 			path?: never;
 			cookie?: never;
 		};
-		/** Get All Tasks */
-		get: operations['get_all_tasks_tasks__get'];
+		/** Get Tasks By User Id */
+		get: operations['get_tasks_by_user_id_tasks__get'];
 		put?: never;
 		/** Create Task */
 		post: operations['create_task_tasks__post'];
-		/** Delete All Tasks */
-		delete: operations['delete_all_tasks_tasks__delete'];
+		/** Delete Tasks By User Id */
+		delete: operations['delete_tasks_by_user_id_tasks__delete'];
 		options?: never;
 		head?: never;
 		patch?: never;
@@ -47,8 +30,7 @@ export interface paths {
 			path?: never;
 			cookie?: never;
 		};
-		/** Get Task */
-		get: operations['get_task_tasks__id__get'];
+		get?: never;
 		put?: never;
 		post?: never;
 		/** Delete Task */
@@ -59,24 +41,6 @@ export interface paths {
 		patch: operations['update_task_tasks__id__patch'];
 		trace?: never;
 	};
-	'/users/': {
-		parameters: {
-			query?: never;
-			header?: never;
-			path?: never;
-			cookie?: never;
-		};
-		/** Get All Users */
-		get: operations['get_all_users_users__get'];
-		put?: never;
-		/** Create User */
-		post: operations['create_user_users__post'];
-		delete?: never;
-		options?: never;
-		head?: never;
-		patch?: never;
-		trace?: never;
-	};
 	'/users/{id}': {
 		parameters: {
 			query?: never;
@@ -84,8 +48,7 @@ export interface paths {
 			path?: never;
 			cookie?: never;
 		};
-		/** Get User */
-		get: operations['get_user_users__id__get'];
+		get?: never;
 		put?: never;
 		post?: never;
 		/** Delete User */
@@ -119,8 +82,8 @@ export interface components {
 			 * @default false
 			 */
 			completed: boolean;
-			/** Userid */
-			userID?: string | null;
+			/** User Id */
+			user_id?: string | null;
 			/**
 			 * Urgent
 			 * @default false
@@ -135,19 +98,10 @@ export interface components {
 			description?: string | null;
 			/** Completed */
 			completed?: boolean | null;
-			/** Userid */
-			userID?: string | null;
+			/** User Id */
+			user_id?: string | null;
 			/** Urgent */
 			urgent?: boolean | null;
-		};
-		/** User */
-		User: {
-			/** @description MongoDB document ObjectID */
-			_id?: components['schemas']['PydanticObjectId'] | null;
-			/** Email */
-			email: string;
-			/** Name */
-			name: string;
 		};
 		/** ValidationError */
 		ValidationError: {
@@ -167,30 +121,12 @@ export interface components {
 }
 export type $defs = Record<string, never>;
 export interface operations {
-	homepage__get: {
+	get_tasks_by_user_id_tasks__get: {
 		parameters: {
 			query?: never;
-			header?: never;
-			path?: never;
-			cookie?: never;
-		};
-		requestBody?: never;
-		responses: {
-			/** @description Successful Response */
-			200: {
-				headers: {
-					[name: string]: unknown;
-				};
-				content: {
-					'application/json': unknown;
-				};
+			header?: {
+				userID?: string;
 			};
-		};
-	};
-	get_all_tasks_tasks__get: {
-		parameters: {
-			query?: never;
-			header?: never;
 			path?: never;
 			cookie?: never;
 		};
@@ -205,12 +141,23 @@ export interface operations {
 					'application/json': components['schemas']['Task'][];
 				};
 			};
+			/** @description Validation Error */
+			422: {
+				headers: {
+					[name: string]: unknown;
+				};
+				content: {
+					'application/json': components['schemas']['HTTPValidationError'];
+				};
+			};
 		};
 	};
 	create_task_tasks__post: {
 		parameters: {
 			query?: never;
-			header?: never;
+			header?: {
+				userID?: string;
+			};
 			path?: never;
 			cookie?: never;
 		};
@@ -240,10 +187,12 @@ export interface operations {
 			};
 		};
 	};
-	delete_all_tasks_tasks__delete: {
+	delete_tasks_by_user_id_tasks__delete: {
 		parameters: {
 			query?: never;
-			header?: never;
+			header?: {
+				userID?: string;
+			};
 			path?: never;
 			cookie?: never;
 		};
@@ -256,28 +205,6 @@ export interface operations {
 				};
 				content: {
 					'application/json': unknown;
-				};
-			};
-		};
-	};
-	get_task_tasks__id__get: {
-		parameters: {
-			query?: never;
-			header?: never;
-			path: {
-				id: string;
-			};
-			cookie?: never;
-		};
-		requestBody?: never;
-		responses: {
-			/** @description Successful Response */
-			200: {
-				headers: {
-					[name: string]: unknown;
-				};
-				content: {
-					'application/json': components['schemas']['Task'];
 				};
 			};
 			/** @description Validation Error */
@@ -294,7 +221,9 @@ export interface operations {
 	delete_task_tasks__id__delete: {
 		parameters: {
 			query?: never;
-			header?: never;
+			header?: {
+				userID?: string;
+			};
 			path: {
 				id: string;
 			};
@@ -325,7 +254,9 @@ export interface operations {
 	update_task_tasks__id__patch: {
 		parameters: {
 			query?: never;
-			header?: never;
+			header?: {
+				userID?: string;
+			};
 			path: {
 				id: string;
 			};
@@ -344,90 +275,6 @@ export interface operations {
 				};
 				content: {
 					'application/json': components['schemas']['Task'];
-				};
-			};
-			/** @description Validation Error */
-			422: {
-				headers: {
-					[name: string]: unknown;
-				};
-				content: {
-					'application/json': components['schemas']['HTTPValidationError'];
-				};
-			};
-		};
-	};
-	get_all_users_users__get: {
-		parameters: {
-			query?: never;
-			header?: never;
-			path?: never;
-			cookie?: never;
-		};
-		requestBody?: never;
-		responses: {
-			/** @description Successful Response */
-			200: {
-				headers: {
-					[name: string]: unknown;
-				};
-				content: {
-					'application/json': components['schemas']['User'][];
-				};
-			};
-		};
-	};
-	create_user_users__post: {
-		parameters: {
-			query?: never;
-			header?: never;
-			path?: never;
-			cookie?: never;
-		};
-		requestBody: {
-			content: {
-				'application/json': components['schemas']['User'];
-			};
-		};
-		responses: {
-			/** @description Successful Response */
-			200: {
-				headers: {
-					[name: string]: unknown;
-				};
-				content: {
-					'application/json': components['schemas']['User'];
-				};
-			};
-			/** @description Validation Error */
-			422: {
-				headers: {
-					[name: string]: unknown;
-				};
-				content: {
-					'application/json': components['schemas']['HTTPValidationError'];
-				};
-			};
-		};
-	};
-	get_user_users__id__get: {
-		parameters: {
-			query?: never;
-			header?: never;
-			path: {
-				id: string;
-			};
-			cookie?: never;
-		};
-		requestBody?: never;
-		responses: {
-			/** @description Successful Response */
-			200: {
-				headers: {
-					[name: string]: unknown;
-				};
-				content: {
-					'application/json': components['schemas']['User'];
 				};
 			};
 			/** @description Validation Error */

@@ -11,23 +11,23 @@
 
 	// ========================Declarations==========================
 	let {
-		taskID,
-		taskTitle,
-		taskDescription,
-		taskCompleted,
+		ID,
+		Title,
+		Description,
+		Completed,
 		editon = $bindable<boolean>(false),
 		badInput = $bindable<boolean>(false)
 	}: {
-		taskID: string;
-		taskTitle: string;
-		taskDescription: string;
-		taskCompleted: boolean;
+		ID: string | undefined | null;
+		Title: string;
+		Description: string;
+		Completed: boolean;
 		editon?: boolean;
 		badInput?: boolean;
 	} = $props();
 	let editable = $state(false);
-	let newTitle = $state(taskTitle);
-	let newDescription = $state(taskDescription);
+	let newTitle = $state(Title);
+	let newDescription = $state(Description);
 	//================================================================
 
 	//========================FUNCTIONS===============================
@@ -35,6 +35,10 @@
 		editable = !editable;
 		editon = editable;
 	};
+
+	if (ID === undefined || ID === null) {
+		throw new Error('Task ID is undefined or null');
+	}
 
 	// Submit the form when the checkbox is toggled
 	const toggleComplete = (taskID: string) => {
@@ -45,10 +49,8 @@
 	// Cancel editing and revert to original values
 	const cancelEdit = () => {
 		toggleEdit();
-		taskTitle = taskTitle; // revert title to original
-		taskDescription = taskDescription; // revert description to original
-		newDescription = taskDescription;
-		newTitle = taskTitle;
+		newDescription = Description;
+		newTitle = Title;
 		badInput = false;
 	};
 
@@ -60,9 +62,7 @@
 		if (newDescription.length > 500) {
 			badInput = true;
 		}
-		if (newTitle.length <= 40 && newDescription.length <= 500) {
-			badInput = false;
-		}
+
 		if (newTitle.length === 0 || newDescription.length === 0) {
 			badInput = true;
 		}
@@ -76,20 +76,20 @@
 		{#key editable}
 			<h3
 				contenteditable={editable}
-				id={`editable-title-${taskID}`}
+				id={`editable-title-${ID}`}
 				class={editable ? 'task-title-edit' : 'task-title'}
-				oninput={(e) => (newTitle = e.currentTarget.textContent ?? taskTitle)}
+				oninput={(e) => (newTitle = e.currentTarget.textContent ?? Title)}
 			>
-				{taskTitle}
+				{Title}
 			</h3>
 
 			<p
 				contenteditable={editable}
-				id={`editable-description-${taskID}`}
+				id={`editable-description-${ID}`}
 				class={editable ? 'task-description-edit' : 'task-description'}
-				oninput={(e) => (newDescription = e.currentTarget.textContent ?? taskDescription)}
+				oninput={(e) => (newDescription = e.currentTarget.textContent ?? Description)}
 			>
-				{taskDescription}
+				{Description}
 			</p>
 		{/key}
 	</div>
@@ -104,9 +104,9 @@
 		{:else}
 			<!-- Form for updating completion status via checkbox-->
 			<form
-				id="complete-form-{taskID}"
+				id="complete-form-{ID}"
 				method="POST"
-				action="?/updateCompleted"
+				action="?/updateTask"
 				use:enhance={() => {
 					return async ({ result }) => {
 						await invalidateAll(); // fix for ensuring that the form consistently updates the DB after the action without needing a page refresh
@@ -116,24 +116,24 @@
 			>
 				<!-- Custom Checkbox for completing tasks -->
 
-				<label for="checkbox-{taskID}" class="checkbox-container">
+				<label for="checkbox-{ID}" class="checkbox-container">
 					<input
-						id="checkbox-{taskID}"
+						id="checkbox-{ID}"
 						type="checkbox"
 						name="completed"
-						bind:checked={taskCompleted}
-						onchange={() => toggleComplete(taskID)}
+						bind:checked={Completed}
+						onchange={() => toggleComplete(ID)}
 					/>
 					<span class="checkmark"></span>
 				</label>
-				<input type="text" name="_id" value={taskID} hidden />
+				<input type="text" name="_id" value={ID} hidden />
 			</form>
 		{/if}
 
 		<!-- Edit Button -->
 		{#if editable === true}
 			<form
-				id={taskID}
+				id={ID}
 				method="POST"
 				action="?/updateTask"
 				use:enhance={() => {
@@ -144,7 +144,7 @@
 					};
 				}}
 			>
-				<input type="text" name="_id" value={taskID} hidden />
+				<input type="text" name="_id" value={ID} hidden />
 				<input type="text" name="title" value={newTitle} required maxlength="40" hidden />
 				<input
 					type="text"
@@ -180,7 +180,7 @@
 
 		<!-- Delete Button -->
 		<form method="POST" action="?/deleteTask" use:enhance>
-			<input type="hidden" name="_id" value={taskID} />
+			<input type="hidden" name="_id" value={ID} />
 			<button class="toggle-button" disabled={editon}>
 				{#if editon}
 					<img src={lock} alt="Locked" class="Locked" />
@@ -422,7 +422,6 @@
 	.checkbox-locked {
 		opacity: 0.5;
 		cursor: not-allowed;
-		background-color: #c3850b;
 		background-color: #c3850b;
 		color: var(--foreground);
 		border: none;

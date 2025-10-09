@@ -6,6 +6,9 @@
 	import type { PageProps } from './$types';
 	import { enhance } from '$app/forms';
 	import alert from '$lib/assets/alert.svg';
+	import { authClient } from '$lib/auth/auth-client';
+	const session = authClient.useSession();
+
 	//==========================================================
 
 	// ================Variable Declarations====================
@@ -16,7 +19,6 @@
 	let showincomplete = $state(false);
 	let editon = $state(false);
 	let badInput = $state(false);
-	let errorVisible = $state('display: none;');
 	//==========================================================
 
 	// ======================FUNCTIONS==========================
@@ -56,6 +58,18 @@
 
 <main>
 	<nav class="navbar">
+		<!-- Search Bar -->
+		<div>
+			<input
+				class="searchbar"
+				type="text"
+				name="searchterm"
+				placeholder="Search tasks..."
+				bind:value={term}
+				disabled={editon}
+			/>
+		</div>
+
 		<!-- Completed Filter Button -->
 		<SidebarButton
 			text="Completed"
@@ -77,18 +91,6 @@
 		<form method="POST" action="?/delete" use:enhance>
 			<SidebarButton text="Clear All" disabled={editon} />
 		</form>
-
-		<!-- Search Bar -->
-		<div>
-			<input
-				class="searchbar"
-				type="text"
-				name="searchterm"
-				placeholder="Search tasks..."
-				bind:value={term}
-				disabled={editon}
-			/>
-		</div>
 	</nav>
 
 	<!-- Content Area -->
@@ -109,18 +111,16 @@
 			</div>
 		{/if}
 		<div class="card-grid-wrapper" transition:fade={{ duration: 200 }}>
-			<!-- Populates the page with task elements and also will determin which cards are to be shown based on the state of filters -->
+			<!-- Populates the page with task elements and also will determine which cards are to be shown based on the state of filters -->
 			{#each filtered as task}
-				{#if task._id}
-					<TaskCard
-						taskTitle={task.title}
-						taskDescription={task.description}
-						taskCompleted={task.completed}
-						taskID={task._id}
-						bind:editon
-						bind:badInput
-					/>
-				{/if}
+				<TaskCard
+					Title={task.title}
+					Description={task.description}
+					Completed={task.completed}
+					ID={task._id}
+					bind:editon
+					bind:badInput
+				/>
 			{:else}
 				<p class="no-todos">No Tasks Found!</p>
 			{/each}
@@ -384,12 +384,6 @@
 
 	/* Error Popup styling */
 
-	.error-message {
-		font-family: 'title';
-		color: var(--foreground);
-		font-size: 1rem;
-		text-align: left;
-	}
 	.error-popup {
 		display: flex;
 		flex-direction: column;
@@ -402,12 +396,13 @@
 		box-shadow: var(--foreground) 4px 4px;
 		height: 3rem;
 		width: auto;
-		z-index: 1000;
+		z-index: 10;
 		position: fixed;
 		left: 50%;
 		top: 50%;
 		transform: translate(-50%, -50%);
 		height: fit-content;
+		z-index: 20;
 	}
 
 	.alert {
@@ -419,7 +414,7 @@
 		position: fixed;
 		inset: 0;
 		background: rgba(0, 0, 0, 0.5);
-		z-index: 999;
+		z-index: 15;
 		height: 100%;
 		width: 100%;
 		display: flex;

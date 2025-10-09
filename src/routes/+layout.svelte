@@ -1,7 +1,19 @@
 <script lang="ts">
 	import '../app.css';
 	import logo from '$lib/assets/TOMMY.png';
-	let { children } = $props();
+	import { signOut } from '$lib/auth/auth-methods';
+	import { onMount } from 'svelte';
+	import { slide } from 'svelte/transition';
+	
+	let { data, children } = $props();
+
+	let ready = $state(false);
+
+	// Ensures that the page title only appears after the page has fully loaded to prevent transition issues
+	onMount(() => {
+		ready = true;
+	});
+
 </script>
 
 <head>
@@ -12,45 +24,61 @@
 	<div>
 		<img src={logo} class="logo" alt="to-do Logo" />
 	</div>
-	<h1 class="page-title">My Tasks</h1>
+	<div>
+		{#if ready && data.user}
+			<h1 class="page-title" transition:slide={{ duration: 300 }}>{data.user.name}'s Tasks</h1>
+		{:else if ready}
+			<h1 class="page-title" transition:slide={{ duration: 300 }}>Tommy's To-Dos</h1>
+		{/if}
+	</div>
+	<div>
+		{#if data.user}
+			<button class="logout-button" onclick={async () => await signOut()}>Log Out</button>
+		{/if}
+	</div>
 </header>
 
 <main>
 	<!-- Main content area which is populated in page.svelte -->
-	{@render children?.()}
+	<svelte:boundary>
+		{@render children?.()}
+		{#snippet pending()}
+			<p class="loading">Loading...</p>
+		{/snippet}
+	</svelte:boundary>
 </main>
 
 <style>
 	header {
 		display: grid;
-		grid-template-columns: 1fr 1fr 1fr;
+		grid-template-columns: 1fr 3fr 1fr;
 		width: 100%;
 		position: fixed;
 		top: 0;
 		left: 0;
 		background-color: var(--cream);
 		z-index: 10;
+		align-items: center;
 	}
 
 	header div {
 		display: flex;
-		justify-content: center;
 		align-items: center;
 	}
 
 	header div:nth-child(1) {
 		justify-content: start;
 		padding-left: 1rem;
-		align-items: end;
 	}
 
 	header div:nth-child(2) {
-		align-items: stretch;
+		display: grid;
+		place-items: center;
 	}
 
 	header div:nth-child(3) {
-		justify-content: center;
-		padding-right: 1rem;
+		justify-content: end;
+		padding-right: 2rem;
 	}
 
 	.logo {
@@ -58,11 +86,10 @@
 	}
 
 	.page-title {
-		font-size: 4.5rem;
+		font-size: 4rem;
 		color: var(--yellow);
 		font-family: 'title';
 		font-weight: bolder;
-		text-align: center;
 		-webkit-text-stroke: 2px var(--foreground);
 		text-shadow: 5px 4px var(--foreground);
 		text-decoration: underline 5px var(--accent);
@@ -72,5 +99,26 @@
 
 	main {
 		margin-top: 12rem;
+	}
+
+	.loading {
+		font-family: '8bit';
+		font-size: 1.5rem;
+		color: var(--foreground);
+		text-align: center;
+		grid-column: 2;
+		grid-row: 6;
+	}
+
+	.logout-button {
+		justify-self: end;
+		align-self: center;
+		padding: 0.5rem 1rem;
+		font-size: 1rem;
+		background-color: var(--accent);
+		color: var(--foreground);
+		border: 2px solid var(--foreground);
+		cursor: pointer;
+		box-shadow: 3px 3px var(--foreground);
 	}
 </style>
