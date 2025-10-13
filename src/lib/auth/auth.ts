@@ -7,6 +7,7 @@ import { sveltekitCookies } from 'better-auth/svelte-kit';
 
 import { dev } from '$app/environment'
 import { MONGODB_URI } from '$env/static/private';
+import { BETTER_AUTH_SECRET } from '$env/static/private';
 import { PUBLIC_BETTER_AUTH_ORIGIN } from '$env/static/public';
 
 // Single Mongo client for the server
@@ -15,6 +16,7 @@ const db = client.db('ToDoDB');
 
 //better Auth instance acting as the auth server
 export const auth = betterAuth({
+	secret: BETTER_AUTH_SECRET,
 	database: mongodbAdapter(db, { client }),
 	emailAndPassword: {
 		enabled: true,
