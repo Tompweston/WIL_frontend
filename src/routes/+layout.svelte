@@ -1,37 +1,68 @@
 <script lang="ts">
-	import "../app.css"
-	import logo from '$lib/assets/taskman.png';
-	let { children } = $props();
+	import '../app.css';
+	import logo from '$lib/assets/TOMMY.png';
+	import { signOut } from '$lib/auth/auth-methods';
+	import { onMount } from 'svelte';
+	import { slide } from 'svelte/transition';
+	
+	let { data, children } = $props();
+
+	let ready = $state(false);
+
+	// Ensures that the page title only appears after the page has fully loaded to prevent transition issues
+	onMount(() => {
+		ready = true;
+	});
+
 </script>
+
 <head>
-  <title>Tommy's To-Dos</title>
+	<title>Tommy's To-Dos</title>
 </head>
+
 <header>
 	<div>
 		<img src={logo} class="logo" alt="to-do Logo" />
 	</div>
-    <h1 class="page-title">Tommy's To-Dos</h1>
+	<div>
+		{#if ready && data.user}
+			<h1 class="page-title" transition:slide={{ duration: 300 }}>{data.user.name}'s Tasks</h1>
+		{:else if ready}
+			<h1 class="page-title" transition:slide={{ duration: 300 }}>Tommy's To-Dos</h1>
+		{/if}
+	</div>
+	<div>
+		{#if data.user}
+			<button class="logout-button" onclick={async () => await signOut()}>Log Out</button>
+		{/if}
+	</div>
 </header>
 
 <main>
-	{@render children?.()}
+	<!-- Main content area which is populated in page.svelte -->
+	<svelte:boundary>
+		{@render children?.()}
+		{#snippet pending()}
+			<p class="loading">Loading...</p>
+		{/snippet}
+	</svelte:boundary>
 </main>
-
-<footer> 
-	Made with ❤️ 
-</footer>
 
 <style>
 	header {
 		display: grid;
-		grid-template-columns: 1fr 1fr 1fr;
-		border-bottom: 2px solid black;
+		grid-template-columns: 1fr 3fr 1fr;
 		width: 100%;
+		position: fixed;
+		top: 0;
+		left: 0;
+		background-color: var(--cream);
+		z-index: 10;
+		align-items: center;
 	}
 
 	header div {
 		display: flex;
-		justify-content: center;
 		align-items: center;
 	}
 
@@ -40,31 +71,54 @@
 		padding-left: 1rem;
 	}
 
+	header div:nth-child(2) {
+		display: grid;
+		place-items: center;
+	}
+
+	header div:nth-child(3) {
+		justify-content: end;
+		padding-right: 2rem;
+	}
+
 	.logo {
-		height: 10vh;
-		will-change: filter;
-		transition: filter 300ms, transform 200ms;
+		height: 8rem;
 	}
 
-	.page-title{
-		font-size: 3vw;
-		color: #cc5500;
-		font-family: title;
+	.page-title {
+		font-size: 4rem;
+		color: var(--yellow);
+		font-family: 'title';
+		font-weight: bolder;
+		-webkit-text-stroke: 2px var(--foreground);
+		text-shadow: 5px 4px var(--foreground);
+		text-decoration: underline 5px var(--accent);
+		text-underline-offset: 0.5rem;
+		padding: 1rem;
 	}
-	
-    .logo:hover {
-        filter: drop-shadow(0 0 1.2em #f74008aa);
-        transform: translateY(-2px);
-    }
 
-	footer {
-        color: #deb887;
-		font-size: 1vw;
-		border-top: 2px solid black;
-		width: 100%;
+	main {
+		margin-top: 12rem;
+	}
+
+	.loading {
+		font-family: '8bit';
+		font-size: 1.5rem;
+		color: var(--foreground);
 		text-align: center;
+		grid-column: 2;
+		grid-row: 6;
 	}
 
-
+	.logout-button {
+		justify-self: end;
+		align-self: center;
+		padding: 0.5rem 1rem;
+		font-size: 1rem;
+		background-color: var(--accent);
+		color: var(--foreground);
+		border: 2px solid var(--foreground);
+		cursor: pointer;
+		box-shadow: 3px 3px var(--foreground);
+	}
 </style>
-
