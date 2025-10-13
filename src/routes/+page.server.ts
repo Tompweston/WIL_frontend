@@ -30,16 +30,12 @@ export const actions = {
 		if (!locals.user) {
 			redirect(302, '/login');
 		}
-		const user_id = locals.user.id;
 		const result = await client.DELETE('/tasks/', {
 			params: { header: { userID: locals.user.id } }
 		});
-		let todos: typeof result.data = [];
-		let success = false;
 
 		if (result.data) {
-			todos = result.data;
-			success = true;
+			return { success: true };
 		}
 	},
 
@@ -56,7 +52,7 @@ export const actions = {
 			return fail(400, { title, description: description, missing: true });
 		}
 
-		const result = await client.POST('/tasks/', {
+		await client.POST('/tasks/', {
 			params: {
 				header: {
 					userID: locals.user.id
@@ -81,7 +77,7 @@ export const actions = {
 		if (!id) {
 			return fail(400, { id, missing: true });
 		}
-		const result = await client.DELETE('/tasks/{id}', {
+		await client.DELETE('/tasks/{id}', {
 			params: {
 				path: { id },
 				header: { userID: locals.user.id }
@@ -102,7 +98,7 @@ export const actions = {
 		if (title === null || description === null || !id) {
 			return fail(400, { id, title, description, missing: true });
 		}
-		const result = await client.PATCH(`/tasks/{id}`, {
+		await client.PATCH(`/tasks/{id}`, {
 			body: {
 				title,
 				description,

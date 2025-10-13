@@ -6,10 +6,6 @@
 	import type { PageProps } from './$types';
 	import { enhance } from '$app/forms';
 	import alert from '$lib/assets/alert.svg';
-	import { authClient } from '$lib/auth/auth-client';
-	const session = authClient.useSession();
-
-	//==========================================================
 
 	// ================Variable Declarations====================
 	let { data, form }: PageProps = $props();
@@ -19,7 +15,6 @@
 	let showincomplete = $state(false);
 	let editon = $state(false);
 	let badInput = $state(false);
-	//==========================================================
 
 	// ======================FUNCTIONS==========================
 	// The function to toggle the modal to appear and disappear
@@ -53,7 +48,6 @@
 		}
 		return filteredTasks;
 	});
-	//===========================================================
 </script>
 
 <main>
@@ -112,7 +106,7 @@
 		{/if}
 		<div class="card-grid-wrapper" transition:fade={{ duration: 200 }}>
 			<!-- Populates the page with task elements and also will determine which cards are to be shown based on the state of filters -->
-			{#each filtered as task}
+			{#each filtered as task (task._id)}
 				<TaskCard
 					Title={task.title}
 					Description={task.description}
