@@ -3,7 +3,7 @@ import { authClient } from './auth-client';
 
 // sign in function
 export async function signIn(email: string, password: string) {
-	const { data, error } = await authClient.signIn.email(
+	await authClient.signIn.email(
 		{
 			/**
 			 * The user email
@@ -24,11 +24,11 @@ export async function signIn(email: string, password: string) {
 			rememberMe: false
 		},
 		{
-			onRequest: (ctx) => {
+			onRequest: () => {
 				//show loading
 				console.log('Loading...');
 			},
-			onSuccess: (ctx) => {
+			onSuccess: () => {
 				//redirect to the dashboard or sign in page
 				goto('/');
 			},
@@ -41,8 +41,8 @@ export async function signIn(email: string, password: string) {
 }
 
 // sign up function
-export async function signUp(email: string, password: string, name: string, image?: string) {
-	const { data, error } = await authClient.signUp.email(
+export async function signUp(email: string, password: string, name: string) {
+	await authClient.signUp.email(
 		{
 			email, // user email address
 			password, // user password -> min 8 characters by default
@@ -50,11 +50,11 @@ export async function signUp(email: string, password: string, name: string, imag
 			callbackURL: '/' // A URL to redirect to after the user verifies their email (optional)
 		},
 		{
-			onRequest: (ctx) => {
+			onRequest: () => {
 				//show loading
 				console.log('Loading...');
 			},
-			onSuccess: (ctx) => {
+			onSuccess: () => {
 				//redirect to the dashboard or sign in page
 				alert('Sign up successful!');
 			},

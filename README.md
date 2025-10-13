@@ -1,3 +1,1 @@
-# Hello Folks
-
-This is the frontend!
+# Tommy's To-Do's Frontend 

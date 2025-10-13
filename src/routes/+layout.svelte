@@ -4,7 +4,7 @@
 	import { signOut } from '$lib/auth/auth-methods';
 	import { onMount } from 'svelte';
 	import { slide } from 'svelte/transition';
-	
+
 	let { data, children } = $props();
 
 	let ready = $state(false);
@@ -13,12 +13,11 @@
 	onMount(() => {
 		ready = true;
 	});
-
 </script>
 
-<head>
+<svelte:head>
 	<title>Tommy's To-Dos</title>
-</head>
+</svelte:head>
 
 <header>
 	<div>
@@ -120,5 +119,15 @@
 		border: 2px solid var(--foreground);
 		cursor: pointer;
 		box-shadow: 3px 3px var(--foreground);
+		font-family: '8bit';
+	}
+
+	.logout-button:hover {
+		color: var(--cream);
+	}
+
+	.logout-button:active {
+		box-shadow: var(--foreground) 0px 0px;
+		transform: translate(2px, 2px);
 	}
 </style>

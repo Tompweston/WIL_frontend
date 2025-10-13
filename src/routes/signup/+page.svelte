@@ -7,32 +7,31 @@
 </script>
 
 <main>
-    <div class="signup-container">
-        <h2 class="signup-title">Sign Up</h2>
+	<div class="signup-container">
+		<h2 class="signup-title">Sign Up</h2>
 
-        <input class="signup-input" placeholder="email" bind:value={signup_email} />
+		<input class="signup-input" placeholder="email" bind:value={signup_email} />
 
-        <input
-            class="signup-input"
-            placeholder="password"
-            type="password"
-            bind:value={signup_password}
-        />
+		<input
+			class="signup-input"
+			placeholder="password"
+			type="password"
+			bind:value={signup_password}
+		/>
 
-        <input class="signup-input" placeholder="name" bind:value={name} maxlength="18" />
+		<input class="signup-input" placeholder="name" bind:value={name} maxlength="18" />
 
-        <button
-            class="signup-button"
-            onclick={async () => await signUp(signup_email, signup_password, name)}
-        >
-            Sign Up
-        </button>
-        <div class="login-prompt">
-            <h2 class="prompt">Already have an account?</h2>
-            <button class="login-link" onclick={async () => await goto('/login')}> Log In </button>
-        </div>
-    </div>
-	
+		<button
+			class="signup-button"
+			onclick={async () => await signUp(signup_email, signup_password, name)}
+		>
+			Sign Up
+		</button>
+		<div class="login-prompt">
+			<h2 class="prompt">Already have an account?</h2>
+			<button class="login-link" onclick={async () => await goto('/login')}> Log In </button>
+		</div>
+	</div>
 </main>
 
 <style>
