@@ -25,11 +25,9 @@ export async function signIn(email: string, password: string) {
 		},
 		{
 			onRequest: () => {
-				//show loading
 				console.log('Loading...');
 			},
 			onSuccess: () => {
-				//redirect to the dashboard or sign in page
 				goto('/');
 			},
 			onError: (ctx) => {
@@ -51,12 +49,10 @@ export async function signUp(email: string, password: string, name: string) {
 		},
 		{
 			onRequest: () => {
-				//show loading
 				console.log('Loading...');
 			},
 			onSuccess: () => {
-				//redirect to the dashboard or sign in page
-				alert('Sign up successful!');
+				goto('/');
 			},
 			onError: (ctx) => {
 				// display the error message
