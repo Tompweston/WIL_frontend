@@ -36,7 +36,7 @@ Before you begin, make sure you have bun installed:
 ### You can download it here 
 https://bun.com/
 
-### Or check if you complete the following
+### Or check if you have bun by running the following:
   ```bash
   bun --version
   ```
