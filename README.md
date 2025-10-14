@@ -1,4 +1,4 @@
-#  SvelteKit + Bun To-Do App
+#  SvelteKit To-Do App
 
 A modern, front-end built with **SvelteKit**. To see the backend to the this full stack web app see my other repo here : 
 https://github.com/Tompweston/WIL_backend
