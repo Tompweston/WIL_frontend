@@ -42,22 +42,25 @@ https://bun.com/
   ```
 ## 📦 Installation
 1. Clone this repository using
-  ```
-  git clone https://github.com/Tompweston/WIL_frontend.git
-  cd WIL_frontend
-  ```
-2. Install dependencies using bun install
+   ```
+   git clone https://github.com/Tompweston/WIL_frontend.git
+   cd WIL_frontend
+   ```
+2. Install dependencies using:
+   ```
+   bun install
+   ```
 
-3. Run the project in dev mode using
+4. Run the project in dev mode using:
    ```
    bun run dev
    ```
-   or use the following to build a preview of a production version
+   or use the following to build a preview of a production version:
    ```
-   bun run build
+   bun run ./build/index.js
    bun run preview
    ```
-4. Make sure you have an instance of the backend running!!!
+5. Make sure you have an instance of the backend running!!!
    You can find that here:
    https://github.com/Tompweston/WIL_backend
 
