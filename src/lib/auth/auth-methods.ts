@@ -40,7 +40,7 @@ export async function signIn(email: string, password: string) {
 
 // sign up function
 export async function signUp(email: string, password: string, name: string) {
-	await authClient.signUp.email(
+	const {data} = await authClient.signUp.email(
 		{
 			email, // user email address
 			password, // user password -> min 8 characters by default
@@ -52,7 +52,7 @@ export async function signUp(email: string, password: string, name: string) {
 				console.log('Loading...');
 			},
 			onSuccess: () => {
-				goto('/');
+				invalidateAll();
 			},
 			onError: (ctx) => {
 				// display the error message
@@ -60,6 +60,10 @@ export async function signUp(email: string, password: string, name: string) {
 			}
 		}
 	);
+
+	if (data){
+		goto('/');
+	}
 } // sign out function
 export async function signOut() {
 	await authClient.signOut({

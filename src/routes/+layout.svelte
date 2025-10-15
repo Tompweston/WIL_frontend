@@ -6,13 +6,8 @@
 	import { slide } from 'svelte/transition';
 
 	let { data, children } = $props();
-
-	let ready = $state(false);
-
-	// Ensures that the page title only appears after the page has fully loaded to prevent transition issues
-	onMount(() => {
-		ready = true;
-	});
+	let username = $derived(data.user?.name ?? null);
+	
 </script>
 
 <svelte:head>
@@ -24,9 +19,9 @@
 		<img src={logo} class="logo" alt="to-do Logo" />
 	</div>
 	<div>
-		{#if ready && data.user}
-			<h1 class="page-title" transition:slide={{ duration: 300 }}>{data.user.name}'s Tasks</h1>
-		{:else if ready}
+		{#if username}
+			<h1 class="page-title" transition:slide={{ duration: 300 }}>{username}'s Tasks</h1>
+		{:else}
 			<h1 class="page-title" transition:slide={{ duration: 300 }}>Tommy's To-Dos</h1>
 		{/if}
 	</div>
