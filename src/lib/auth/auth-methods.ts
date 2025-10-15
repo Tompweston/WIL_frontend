@@ -25,11 +25,9 @@ export async function signIn(email: string, password: string) {
 		},
 		{
 			onRequest: () => {
-				//show loading
 				console.log('Loading...');
 			},
 			onSuccess: () => {
-				//redirect to the dashboard or sign in page
 				goto('/');
 			},
 			onError: (ctx) => {
@@ -42,7 +40,7 @@ export async function signIn(email: string, password: string) {
 
 // sign up function
 export async function signUp(email: string, password: string, name: string) {
-	await authClient.signUp.email(
+	const { data } = await authClient.signUp.email(
 		{
 			email, // user email address
 			password, // user password -> min 8 characters by default
@@ -51,12 +49,10 @@ export async function signUp(email: string, password: string, name: string) {
 		},
 		{
 			onRequest: () => {
-				//show loading
 				console.log('Loading...');
 			},
 			onSuccess: () => {
-				//redirect to the dashboard or sign in page
-				alert('Sign up successful!');
+				invalidateAll();
 			},
 			onError: (ctx) => {
 				// display the error message
@@ -64,6 +60,10 @@ export async function signUp(email: string, password: string, name: string) {
 			}
 		}
 	);
+
+	if (data) {
+		goto('/');
+	}
 } // sign out function
 export async function signOut() {
 	await authClient.signOut({

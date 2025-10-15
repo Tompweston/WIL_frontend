@@ -5,7 +5,7 @@ import { mongodbAdapter } from 'better-auth/adapters/mongodb';
 import { getRequestEvent } from '$app/server';
 import { sveltekitCookies } from 'better-auth/svelte-kit';
 
-import { dev } from '$app/environment'
+import { dev } from '$app/environment';
 import { MONGODB_URI } from '$env/static/private';
 import { BETTER_AUTH_SECRET } from '$env/static/private';
 import { PUBLIC_BETTER_AUTH_ORIGIN } from '$env/static/public';
