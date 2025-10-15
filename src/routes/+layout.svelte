@@ -2,12 +2,11 @@
 	import '../app.css';
 	import logo from '$lib/assets/TOMMY.png';
 	import { signOut } from '$lib/auth/auth-methods';
-	import { onMount } from 'svelte';
 	import { slide } from 'svelte/transition';
 
 	let { data, children } = $props();
 	let username = $derived(data.user?.name ?? null);
-	
+
 </script>
 
 <svelte:head>
